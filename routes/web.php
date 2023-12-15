@@ -37,7 +37,7 @@ Route::get('/login', [UserController::class, 'login']);
 // // Routes for managing courses
 // Route::get('/course/create', [CourseController::class, 'create']);
 // Route::post('/course', [CourseController::class, 'store']);
-// Route::get('/course', [CourseController::class, 'index']);
+Route::get('/course', [CourseController::class, 'index']);
 // Route::get('/course/{id}', [CourseController::class, 'show']);
 // Route::get('/course/{id}/edit', [UserController::class, 'edit']);
 // Route::put('/course/{id}', [CourseController::class, 'update']);

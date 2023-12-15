@@ -11,6 +11,9 @@ export default {
   theme: {
     extend: {},
   },
+    daisyui: {
+        themes: ["dracula", "winter"]
+    },
   plugins: [require("daisyui")],
 }
 

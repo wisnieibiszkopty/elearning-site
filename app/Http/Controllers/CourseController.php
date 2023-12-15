@@ -15,7 +15,7 @@ class CourseController extends Controller
     }
 
     public function index(){
-
+        return view('course/index');
     }
 
     public function show(int $id){
