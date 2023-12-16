@@ -7,7 +7,8 @@
     <div class="card bg-base-100 shadow-xl max-w-xs sm:max-w-full" >
         <div class="card-body">
             <h1 class="card-title">Login</h1>
-            <form>
+            <form method="POST" action="/auth/login">
+                @csrf
                 <input type="text" name="email" id="email" placeholder="E-mail"
                        class="input input-bordered w-full my-3">
                 <label for="password"></label>

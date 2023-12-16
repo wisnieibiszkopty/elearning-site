@@ -3,6 +3,10 @@
 @section('title', 'Your courses')
 
 @section('main')
+    <form method="POST" action="/auth/logout">
+        @csrf
+        <button class="btn btn-primary">Logout</button>
+    </form>
     <!-- Table is wrong solution -->
     <div class="overflow-x-auto">
         <table class="table">

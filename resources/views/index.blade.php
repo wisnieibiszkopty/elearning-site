@@ -13,4 +13,18 @@
         </div>
     </div>
 </div>
+<footer class="footer p-10 bg-base-200 text-neutral-content">
+    <nav>
+        <header class="footer-title">Contact us</header>
+        <a href="https://github.com/wisnieibiszkopty" target="_blank" class="link link-hover" >Github</a>
+        <a href="https://www.linkedin.com/in/kamil-wodowski-594a61298/" target="_blank" class="link link-hover">Linkedin</a>
+        <a href="" class="link link-hover">Onlyfans</a>
+    </nav>
+    <nav>
+        <header class="footer-title">Technologies</header>
+        <a href="https://laravel.com" target="_blank" class="link link-hover">Laravel</a>
+        <a href="https://tailwindcss.com" target="_blank" class="link link-hover">Tailwind</a>
+        <a href="https://daisyui.com" target="_blank" class="link link-hover">Daisy UI</a>
+    </nav>
+</footer>
 @endsection

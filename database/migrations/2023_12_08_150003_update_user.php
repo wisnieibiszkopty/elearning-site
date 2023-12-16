@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function(Blueprint $table){
             $table->string("company");
-            $table->string("avatarPath");
+            $table->string("avatarPath")->nullable(true);
             $table->integer("role")->default(0);
 
         });

@@ -15,29 +15,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// middleware guest redirect to home which is not defined
+
 Route::get('/', function () {
     return view('index');
-});
+})->name('home')->middleware('guest');
 
 // Routes for user authentication
-Route::get('/register', [UserController::class, 'register']);
-Route::get('/login', [UserController::class, 'login']);
+Route::get('/register', [UserController::class, 'register'])->middleware('guest');
+Route::get('/login', [UserController::class, 'login'])->name('login')->middleware('guest');
 
 // methods below have empty bodies now, to serve app comment them
-// Route::post('/auth/login', UserController::class, 'auth');
-// Route::post('/auth/logout', [UserController::class, 'logout']);
-// Route::post('/auth/register', [UserController::class, 'store']);
+Route::post('/auth/login', [UserController::class, 'auth'])->middleware('guest');
+Route::post('/auth/logout', [UserController::class, 'logout'])->middleware('auth');
+Route::post('/auth/register', [UserController::class, 'store'])->middleware('guest');
 
 // // Routes for managing users
-// Route::get('/user/{id}', [UserController::class], 'show');
-// Route::get('/user/{id}/edit', [UserController::class], 'edit');
+Route::get('/user/{id}', [UserController::class, 'show'])->middleware('auth');
+// Route::get('/user/{id}/edit', [UserController::class, 'edit']);
 // Route::put('/user/{id}', [UserController::class, 'update']);
 // Route::delete('/user/{id}', [UserController::class, 'destroy']);
 
 // // Routes for managing courses
 // Route::get('/course/create', [CourseController::class, 'create']);
 // Route::post('/course', [CourseController::class, 'store']);
-Route::get('/course', [CourseController::class, 'index']);
+Route::get('/courses', [CourseController::class, 'index'])->middleware('auth');
 // Route::get('/course/{id}', [CourseController::class, 'show']);
 // Route::get('/course/{id}/edit', [UserController::class, 'edit']);
 // Route::put('/course/{id}', [CourseController::class, 'update']);
