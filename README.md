@@ -8,6 +8,9 @@ to create all tables in that database.
 
 To serve app go to project directory and run: 
 ```bash
+yarn dev
+```
+```bash
 php artisan serve
 ```
 
