@@ -32,7 +32,8 @@ Route::post('/auth/register', [UserController::class, 'store'])->middleware('gue
 
 // // Routes for managing users
 Route::get('/user/{id}', [UserController::class, 'show'])->middleware('auth');
-// Route::get('/user/{id}/edit', [UserController::class, 'edit']);
+Route::get('/user/{id}/edit', [UserController::class, 'edit'])->middleware('auth');
+Route::patch('/user/{id}/avatar', [UserController::class, 'avatar'])->middleware('auth');
 // Route::put('/user/{id}', [UserController::class, 'update']);
 // Route::delete('/user/{id}', [UserController::class, 'destroy']);
 

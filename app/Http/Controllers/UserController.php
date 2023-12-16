@@ -3,20 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
-    public function register(){
+    public function register(): View{
         return view("registration");
     }
 
-    public function login(){
+    public function login(): View{
         return view("login");
     }
 
-    // avatarPath isn't set to null by default, change it later in migrations
     public function store(Request $request){
         $form = $request->validate([
             'name' => ['required'],
@@ -56,8 +58,8 @@ class UserController extends Controller
         return redirect('/');
     }
 
-    public function show($id){
-        $user = User::find($id, ['id', 'name', 'email', 'company', 'role']);
+    public function show($id): View{
+        $user = User::find($id, ['id', 'name', 'email', 'company', 'role', 'avatarPath']);
 
         //$authUser = Auth::user();
         //dd($authUser);
@@ -69,8 +71,31 @@ class UserController extends Controller
         abort(404);
     }
 
-    public function edit(){
+    public function edit($id): View{
+        return view('user.update', ['id' => $id]);
+    }
 
+    public function avatar(Request $request, $id){
+        $user = User::find($id);
+
+        if($request->hasFile('avatar') && $user){
+            // deleting old avatar if exists
+            // it don't work actually
+            $relativePath = 'public/' . $user->avatarPath;
+            $fullpath = storage_path($relativePath);
+            if(Storage::exists($fullpath)){
+                Storage::delete($fullpath);
+            }
+
+            // storing new avatar
+            $file = $request->file('avatar');
+            $user->avatarPath = $file->store('avatars', 'public');
+            $user->save();
+            return redirect('/user/' . $id);
+        }
+
+        // add error message
+        return redirect('/user/' . $id);
     }
 
     public function update(){
