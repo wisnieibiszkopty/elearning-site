@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
             $table->string("title");
-            $table->unsignedBigInteger('author')->nullable();
+            $table->unsignedBigInteger('author');
             $table->text('description');
-            $table->string('imagePath');
+            $table->string('imagePath')->nullable();
             $table->timestamps();
 
             $table->foreign('author')->references('id')->on('users')->onDelete('set null');

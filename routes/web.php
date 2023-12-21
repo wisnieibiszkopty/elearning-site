@@ -32,16 +32,18 @@ Route::post('/auth/register', [UserController::class, 'store'])->middleware('gue
 
 // // Routes for managing users
 Route::get('/user/{id}', [UserController::class, 'show'])->middleware('auth');
+Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth');
 Route::get('/user/{id}/edit', [UserController::class, 'edit'])->middleware('auth');
 Route::patch('/user/{id}/avatar', [UserController::class, 'avatar'])->middleware('auth');
-// Route::put('/user/{id}', [UserController::class, 'update']);
-// Route::delete('/user/{id}', [UserController::class, 'destroy']);
+Route::patch('/user/{id}/password', [UserController::class, 'password'])->middleware('auth');
+Route::put('/user/{id}', [UserController::class, 'update']);
 
 // // Routes for managing courses
-// Route::get('/course/create', [CourseController::class, 'create']);
-// Route::post('/course', [CourseController::class, 'store']);
-Route::get('/courses', [CourseController::class, 'index'])->middleware('auth');
-// Route::get('/course/{id}', [CourseController::class, 'show']);
+Route::get('/course/create', [CourseController::class, 'create'])->middleware(['auth', 'teacher']);
+Route::post('/course', [CourseController::class, 'store'])->middleware('auth');
+Route::post('/course/join', [CourseController::class, 'join'])->middleware('auth');
+Route::get('/course', [CourseController::class, 'index'])->middleware('auth');
+Route::get('/course/{id}', [CourseController::class, 'show']);
 // Route::get('/course/{id}/edit', [UserController::class, 'edit']);
 // Route::put('/course/{id}', [CourseController::class, 'update']);
 // Route::delete('/course/{id}', [CourseController::class, 'destroy']);

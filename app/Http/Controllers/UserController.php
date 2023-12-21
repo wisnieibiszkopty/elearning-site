@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
@@ -45,7 +44,7 @@ class UserController extends Controller
 
         if(auth()->attempt($form)){
             $request->session()->regenerate();
-            return redirect('/courses');
+            return redirect('/course');
         }
 
         return redirect('/login');
@@ -61,9 +60,6 @@ class UserController extends Controller
     public function show($id): View{
         $user = User::find($id, ['id', 'name', 'email', 'company', 'role', 'avatarPath']);
 
-        //$authUser = Auth::user();
-        //dd($authUser);
-
         if($user){
             return view('user.show', ['user' => $user]);
         }
@@ -72,7 +68,8 @@ class UserController extends Controller
     }
 
     public function edit($id): View{
-        return view('user.update', ['id' => $id]);
+        $user = User::find($id);
+        return view('user.update', ['user' => $user]);
     }
 
     public function avatar(Request $request, $id){
@@ -81,11 +78,11 @@ class UserController extends Controller
         if($request->hasFile('avatar') && $user){
             // deleting old avatar if exists
             // it don't work actually
-            $relativePath = 'public/' . $user->avatarPath;
-            $fullpath = storage_path($relativePath);
-            if(Storage::exists($fullpath)){
-                Storage::delete($fullpath);
-            }
+            $path = $user->avatarPath;  
+            //dd(public_path($path));
+            // if(file_exists(public_path($path))){
+            //     unlink(public_path($path));
+            // }
 
             // storing new avatar
             $file = $request->file('avatar');
@@ -98,11 +95,47 @@ class UserController extends Controller
         return redirect('/user/' . $id);
     }
 
-    public function update(){
+    // add message to back()
+    public function password(Request $request){
+        $passwordForm = $request->validate([
+            'old-password' => ['required'],
+            'new-password' => ['required', 'confirmed']
+        ]);
 
+        $user = User::find(auth()->id());
+
+        if(Hash::check($passwordForm['old-password'], $user->password)){
+            $user->password = bcrypt($passwordForm['new-password']);
+            $user->save();
+            return back();
+        }
+
+        return back();
     }
 
-    public function destroy(){
+    public function update(Request $request){
+        $updateForm = $request->validate([
+            'name' => ['required'],
+            'email' => ['required', 'email'],
+            'company' => ['required']
+        ]);
 
+        $user = User::find(auth()->id());
+        $user->name = $updateForm['name'];
+        $user->email = $updateForm['email'];
+        $user->company = $updateForm['company'];
+        $user->save();
+        
+        return back();
+    }
+
+    public function destroy($id){
+
+        if($id == auth()->id()){
+            User::destroy($id);
+            return redirect('/');
+        }
+
+        return redirect('/user/' . $id . "/edit");
     }
 }
