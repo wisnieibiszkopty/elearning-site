@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 
 /*
-    For sure i need to add some kind of key for students to join course
     also tags would be cool
     maybe delete imagePath ???
 */
@@ -18,7 +17,14 @@ class CourseController extends Controller
     // return courses
     public function index(){
         $role = auth()->user()->role;
-        return view('/course/index', ['role' => $role]);
+        if($role == 1){
+            $courses = Course::where('author_id', auth()->id())->get();
+        } else if($role == 0){
+            $courses = auth()->user()->courses;
+        }
+
+        return view('/course/index', ['role' => $role,
+                                      'courses' => $courses]);
     }
 
     public function create(){
@@ -40,6 +46,9 @@ class CourseController extends Controller
         ]);
 
         if($course->save()){
+
+            // author of the course also has to be member of it to pass authentication
+            $course->members()->attach(auth()->id());
             return redirect('course/' . $course->id);
         }
     }
@@ -61,11 +70,12 @@ class CourseController extends Controller
     }
 
     public function show(int $id){
-        dd($id);
+        $course = Course::find($id);
+        return view('course/show', ['course' => $course]);
     }
 
     public function edit(int $id){
-
+        return view('course/update');
     }
 
     public function update(int $id){

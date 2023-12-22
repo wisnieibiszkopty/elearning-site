@@ -25,12 +25,11 @@ Route::get('/', function () {
 Route::get('/register', [UserController::class, 'register'])->middleware('guest');
 Route::get('/login', [UserController::class, 'login'])->name('login')->middleware('guest');
 
-// methods below have empty bodies now, to serve app comment them
 Route::post('/auth/login', [UserController::class, 'auth'])->middleware('guest');
-Route::post('/auth/logout', [UserController::class, 'logout'])->middleware('auth');
 Route::post('/auth/register', [UserController::class, 'store'])->middleware('guest');
+Route::post('/auth/logout', [UserController::class, 'logout'])->middleware('auth');
 
-// // Routes for managing users
+// Routes for managing users
 Route::get('/user/{id}', [UserController::class, 'show'])->middleware('auth');
 Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth');
 Route::get('/user/{id}/edit', [UserController::class, 'edit'])->middleware('auth');
@@ -38,12 +37,12 @@ Route::patch('/user/{id}/avatar', [UserController::class, 'avatar'])->middleware
 Route::patch('/user/{id}/password', [UserController::class, 'password'])->middleware('auth');
 Route::put('/user/{id}', [UserController::class, 'update']);
 
-// // Routes for managing courses
+// Routes for managing courses
 Route::get('/course/create', [CourseController::class, 'create'])->middleware(['auth', 'teacher']);
 Route::post('/course', [CourseController::class, 'store'])->middleware(['auth', 'teacher']);
 Route::post('/course/join', [CourseController::class, 'join'])->middleware('auth');
 Route::get('/course', [CourseController::class, 'index'])->middleware('auth');
-Route::get('/course/{id}', [CourseController::class, 'show']);
-// Route::get('/course/{id}/edit', [UserController::class, 'edit']);
+Route::get('/course/{id}', [CourseController::class, 'show'])->middleware(['auth', 'member']);
+Route::get('/course/{id}/edit', [CourseController::class, 'edit'])->middleware(['auth', 'author']);
 // Route::put('/course/{id}', [CourseController::class, 'update']);
 // Route::delete('/course/{id}', [CourseController::class, 'destroy']);

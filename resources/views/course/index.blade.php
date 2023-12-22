@@ -29,4 +29,26 @@
             </dialog>
         </div>
     @endif
+    <div class="collapse collapse-arrow bg-base-200">
+        <input type="checkbox"> 
+        <div class="collapse-title text-xl font-medium">
+            Filters
+        </div>
+        <div class="collapse-content"> 
+            <p>jazda</p>
+        </div>
+    </div>
+    <!-- Just to check if it works, styles, etc will be added later-->
+    <div>
+        @forelse($courses as $course)
+            <div>
+                <a href="/course/{{ $course->id }}">
+                    <h1>{{ $course->title }}</h1>
+                </a>
+                <p>{{ $course->author_id }}</p>
+            </div>
+        @empty
+            <h1>It seems that you don't join any courses yet</h1>
+        @endforelse
+    </div>
 @endsection
