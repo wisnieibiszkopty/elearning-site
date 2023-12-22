@@ -40,7 +40,7 @@ Route::put('/user/{id}', [UserController::class, 'update']);
 
 // // Routes for managing courses
 Route::get('/course/create', [CourseController::class, 'create'])->middleware(['auth', 'teacher']);
-Route::post('/course', [CourseController::class, 'store'])->middleware('auth');
+Route::post('/course', [CourseController::class, 'store'])->middleware(['auth', 'teacher']);
 Route::post('/course/join', [CourseController::class, 'join'])->middleware('auth');
 Route::get('/course', [CourseController::class, 'index'])->middleware('auth');
 Route::get('/course/{id}', [CourseController::class, 'show']);

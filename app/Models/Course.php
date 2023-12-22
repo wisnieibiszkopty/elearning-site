@@ -10,14 +10,18 @@ class Course extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'author', 'description', 'imagePath'
+        'title', 'author_id', 'description', 'imagePath', 'code'
     ];
 
     public function author(){
-        return $this->belongsTo(User::class, 'author');
+        return $this->belongsTo(User::class, 'author_id');
     }
 
-    public function users(){
-        return $this->belongsToMany(User::class);
+    public function members(){
+        return $this->belongsToMany(User::class, 'members');
+    }
+
+    public function posts(){
+        return $this->hasMany(Post::class);
     }
 }

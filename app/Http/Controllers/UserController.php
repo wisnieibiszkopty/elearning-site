@@ -33,7 +33,7 @@ class UserController extends Controller
         $user = User::create($form);
         auth()->login($user);
 
-        return redirect('/courses');
+        return redirect('/course');
     }
 
     public function auth(Request $request){

@@ -14,8 +14,10 @@ use App\Models\User;
 
 class CourseController extends Controller
 {
+
+    // return courses
     public function index(){
-        $role = User::find(auth()->id(), ['role'])->role;
+        $role = auth()->user()->role;
         return view('/course/index', ['role' => $role]);
     }
 
@@ -26,13 +28,15 @@ class CourseController extends Controller
     public function store(Request $request){
         $form = $request->validate([
             'title' => [],
-            'description' => []
+            'description' => [],
+            'code' => []
         ]);
 
         $course = new Course([
             'title' => $form['title'],
             'description' => $form['description'],
-            'author' => auth()->id()
+            'code' => $form['code'],
+            'author_id' => auth()->id()
         ]);
 
         if($course->save()){
@@ -40,8 +44,20 @@ class CourseController extends Controller
         }
     }
 
+    // method for adding user to course, based on members table
+    // add error message
     public function join(Request $request){
+        $entryCode = $request['code'];
+        $course = Course::where('code', $entryCode)->firstOrFail();
+        if($course){
+            $userId = auth()->id();
+            // check if user isnt already in course
+            $course->members()->attach($userId);
 
+            return redirect('course/' . $course->id);
+        }
+
+        return back();
     }
 
     public function show(int $id){
