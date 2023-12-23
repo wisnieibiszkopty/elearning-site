@@ -2,19 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @media (min-width: 600px){
-    .btm-nav{
-        display: none;
-    }
-}
-
-@media (max-width: 599px){
-    .sidebar{
-        display: none;
-    }
-} */
-
-
 .avatar-img:hover, .change-avatar:hover + .avatar-img{
     opacity: 0.5;
 }

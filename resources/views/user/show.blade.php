@@ -4,6 +4,7 @@
 
 @section('main')
 <div class="m-2">
+    @if($user->id == auth()->id())
     <div class="avatar">
         <div class="w-24 rounded-full profile-picture" onclick="profile_modal.showModal()">
             <img class="avatar-img" src="{{ $user->avatarPath ? asset('storage/' . $user->avatarPath) : asset('images/avatar-placeholder.jpg') }}" alt="User profile picture">
@@ -26,7 +27,13 @@
             </form>
         </div>
     </dialog>
-    
+    @else
+    <div class="avatar">
+        <div class="w-24 rounded-full profile-picture">
+            <img src="{{ $user->avatarPath ? asset('storage/' . $user->avatarPath) : asset('images/avatar-placeholder.jpg') }}" alt="User profile picture">
+        </div>
+    </div>
+    @endif
     @if(Auth::id() == $user->id)
     <a href="/user/{{ $user->id }}/edit">
         <button class="btn btn-primary">Manage</button>

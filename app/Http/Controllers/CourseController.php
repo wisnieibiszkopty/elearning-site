@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
-use Illuminate\Http\Request;
+use App\Models\Post;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+use function Laravel\Prompts\select;
 
 /*
     also tags would be cool
@@ -61,7 +65,9 @@ class CourseController extends Controller
         if($course){
             $userId = auth()->id();
             // check if user isnt already in course
-            $course->members()->attach($userId);
+            if(!$course->members()->where('user_id', $userId)->exists()){
+                $course->members()->attach($userId);   
+            }
 
             return redirect('course/' . $course->id);
         }
@@ -69,20 +75,65 @@ class CourseController extends Controller
         return back();
     }
 
+    // i'm not sure how to get data from 3 tables with orm
+    // chuj wie jak to napisać, zrobie sobie przerwe z tym
     public function show(int $id){
         $course = Course::find($id);
-        return view('course/show', ['course' => $course]);
+        //$course = Course::with(['posts.author:name,created_at,avatarPath'])->find($id);
+        $posts = DB::table('posts') 
+            ->where('course_id', $id)
+            ->join('users', 'author_id', '=', 'users.id')
+            //->leftJoin('comments', 'posts.id', '=', 'comments.post_id')
+            //->join('users as comment_user', 'comments.author_id', '=', 'comment_user.id')
+            ->select('posts.*', 'users.name', 'users.avatarPath')
+            //'comments.*', 'comment_user.name as comment_name', 'comment_user.avatarPath as comment_avatar')
+            ->orderByDesc('created_at')
+            //->get();
+            ->paginate(10);
+        //dd($posts);
+        return view('course/posts', ['course' => $course,
+                                    'posts' => $posts]);
     }
 
     public function edit(int $id){
-        return view('course/update');
+        $course = Course::find($id);
+        return view('course/update', ['course' => $course]);
     }
 
-    public function update(int $id){
+    public function image(Request $request, int $id){
+        $course = Course::find($id);
+        if($request->hasFile('image') && $course){
+            $file = $request->file('image');
+            $course->imagePath = $file->store('course_images', 'public');
+            $course->save();
+        }
+        return back();
+    }
 
+    public function update(Request $request, int $id){
+        $form = $request->validate([
+            'title' => [],
+            'code' => [],
+            'description' => []
+        ]);
+
+        $course = Course::find($id);
+        if($course){
+            $course->title = $form['title'];
+            $course->code = $form['code'];
+            $course->description = $form['description'];
+            $course->save();
+        }
+        return back();
     }
 
     public function destroy(int $id){
+        $course = Course::find($id);
+        if($course->author_id == auth()->id()){
+            $course->destroy();
+            return redirect('/course');
+        }
 
+        return redirect('/course/' . $id . '/edit');
     }
 }

@@ -12,7 +12,5 @@
         <x-sidebar></x-sidebar>
         <label for="drawer" class="drawer-overlay" aria-label="Close menu"></label>
     </div>
-    <!-- for now bottom nav seems useless -->
-    <!--<x-bottom></x-bottom>-->
 </div>
 @endsection

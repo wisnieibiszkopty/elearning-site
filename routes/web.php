@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,5 +46,17 @@ Route::post('/course/join', [CourseController::class, 'join'])->middleware('auth
 Route::get('/course', [CourseController::class, 'index'])->middleware('auth');
 Route::get('/course/{id}', [CourseController::class, 'show'])->middleware(['auth', 'member']);
 Route::get('/course/{id}/edit', [CourseController::class, 'edit'])->middleware(['auth', 'author']);
-// Route::put('/course/{id}', [CourseController::class, 'update']);
-// Route::delete('/course/{id}', [CourseController::class, 'destroy']);
+Route::patch('/course/{id}/image', [CourseController::class, 'image'])->middleware(['auth', 'author']);
+Route::put('/course/{id}', [CourseController::class, 'update'])->middleware(['auth', 'author']);
+Route::delete('/course/{id}', [CourseController::class, 'destroy'])->middleware(['auth', 'author']);
+
+// Routes for managing posts
+Route::get('/course/{id}/posts', [PostController::class, 'index'])->middleware(['auth', 'member']);
+Route::post('/course/{id}/posts/create', [PostController::class, 'store'])->middleware(['auth', 'member']);
+Route::put('/course/{id}/posts/{postId}', [PostController::class, 'update'])->middleware(['auth', 'member']);
+Route::delete('/course/{id}/posts/{postId}', [PostController::class, 'destroy'])->middleware(['auth', 'member']);
+
+// Routes for managing comments
+Route::post('/course/{id}/posts/{postId}/comments/create', [CommentController::class, 'store'])->middleware(['auth', 'member']);
+Route::put('/course/{id}/posts/{postId}/comments/{commentId}', [CommentController::class, 'update'])->middleware(['auth', 'member']);
+Route::delete('/course/{id}/posts/{postId}/comments/{commentId}', [CommentController::class, 'destroy'])->middleware(['auth', 'member']);
