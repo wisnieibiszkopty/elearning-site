@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\HomeworkController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ResourceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -57,6 +59,23 @@ Route::put('/course/{id}/posts/{postId}', [PostController::class, 'update'])->mi
 Route::delete('/course/{id}/posts/{postId}', [PostController::class, 'destroy'])->middleware(['auth', 'member']);
 
 // Routes for managing comments
+// not working yet
 Route::post('/course/{id}/posts/{postId}/comments/create', [CommentController::class, 'store'])->middleware(['auth', 'member']);
 Route::put('/course/{id}/posts/{postId}/comments/{commentId}', [CommentController::class, 'update'])->middleware(['auth', 'member']);
 Route::delete('/course/{id}/posts/{postId}/comments/{commentId}', [CommentController::class, 'destroy'])->middleware(['auth', 'member']);
+
+// Routes for managing resources in course
+// think about some secuirty rules for uploaded files
+Route::get('/course/{id}/resources', [ResourceController::class, 'index'])->middleware(['auth', 'member']);
+Route::post('/course/{id}/resources/create', [ResourceController::class, 'store'])->middleware(['auth', 'author']);
+Route::put('/course/{id}/resources/{resourceId}', [ResourceController::class, 'update'])->middleware(['auth', 'author']);
+Route::delete('/course/{id}/resources/{resourceId}', [ResourceController::class, 'destroy'])->middleware(['auth', 'author']);
+
+// Routes for managing homework
+Route::get('/course/{id}/homework', [HomeworkController::class, 'index']);
+Route::get('/course/{id}/homework/create', [HomeworkController::class, 'create']);
+Route::post('/course/{id}/homework', [HomeworkController::class, 'store']);
+Route::get('/course/{id}/homework/{homeworkId}', [HomeworkController::class, 'show']);
+Route::get('/course/{id}/homework/{homeworkId}/edit', [HomeworkController::class, 'edit']);
+Route::put('/course/{id}/homework/{homeworkId}', [HomeworkController::class, 'update']);
+Route::delete('/course/{id}/homework/{homeworkId}', [HomeworkController::class, 'destroy']);

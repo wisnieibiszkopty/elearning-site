@@ -24,4 +24,12 @@ class Course extends Model
     public function posts(){
         return $this->hasMany(Post::class);
     }
+
+    public function resources(){
+        return $this->hasMany(Resource::class);
+    }
+
+    public function homework(){
+        return $this->hasMany(Homework::class);
+    }
 }
