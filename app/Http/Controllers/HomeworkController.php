@@ -51,17 +51,13 @@ class HomeworkController extends Controller
         return redirect('/course/' . $id . '/homework');
     }
 
-    public function show(int $id, int $homeworkId){
+    public function edit(int $id, int $homeworkId){
         $course = Course::find($id);
         $homework = Homework::find($homeworkId);
-        return view('/course/homework/show', [
+        return view('/course/homework/edit', [
             'course' => $course,
             'homework' => $homework
         ]);
-    }
-
-    public function edit(){
-
     }
 
     public function update(){

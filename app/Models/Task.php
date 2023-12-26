@@ -13,6 +13,8 @@ class Task extends Model
         'author_id',
         'homework_id',
         'file_path',
+        'filename',
+        'sended_on_time',
         'comment'
     ];
 

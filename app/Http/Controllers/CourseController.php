@@ -10,11 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 use function Laravel\Prompts\select;
 
-/*
-    also tags would be cool
-    maybe delete imagePath ???
-*/
-
 class CourseController extends Controller
 {
 

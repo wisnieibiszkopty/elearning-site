@@ -31,6 +31,8 @@ return new class extends Migration
             $table->foreignId('homework_id')->constrained();
             //$table->foreignId('author_id')->constrained();
             $table->string('file_path');
+            $table->string('filename');
+            $table->boolean('sended_on_time');
             $table->string('comment');
             $table->timestamps();
 
@@ -44,7 +46,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('homework');
         Schema::dropIfExists('task');
+        Schema::dropIfExists('homework');
     }
 };

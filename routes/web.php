@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeworkController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ResourceController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,8 +19,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-// middleware guest redirect to home which is not defined
 
 Route::get('/', function () {
     return view('index');
@@ -75,7 +74,11 @@ Route::delete('/course/{id}/resources/{resourceId}', [ResourceController::class,
 Route::get('/course/{id}/homework', [HomeworkController::class, 'index']);
 Route::get('/course/{id}/homework/create', [HomeworkController::class, 'create']);
 Route::post('/course/{id}/homework', [HomeworkController::class, 'store']);
-Route::get('/course/{id}/homework/{homeworkId}', [HomeworkController::class, 'show']);
 Route::get('/course/{id}/homework/{homeworkId}/edit', [HomeworkController::class, 'edit']);
 Route::put('/course/{id}/homework/{homeworkId}', [HomeworkController::class, 'update']);
 Route::delete('/course/{id}/homework/{homeworkId}', [HomeworkController::class, 'destroy']);
+
+// Routes for managing task
+Route::get('/course/{id}/homework/{homeworkId}', [TaskController::class, 'show']);
+Route::post('/course/{id}/homework/{homeworkId}/task/create', [TaskController::class, 'create']);
+Route::delete('/course/{id}/homework/{homeworkId}/task/{taskId}', [TaskController::class, 'destroy']);

@@ -8,9 +8,7 @@
         <a href="/course/{{$course->id}}/homework/create"><button class="btn btn-secondary">Add homework</button></a>
     @endif
     @foreach($course->homework->reverse() as $homework)
-        @if(!(auth()->id() != $course->author_id && !$homework->available))
-            <a href=""><h3>{{$homework->name}}</h3></a>
-            <p>Deadline: {{$homework->finish_date}}</p>
-        @endif
+        <a href="/course/{{$course->id}}/homework/{{$homework->id}}"><h3>{{$homework->name}}</h3></a>
+        <p>Deadline: {{$homework->finish_date}}</p>
     @endforeach
 @endsection
