@@ -82,3 +82,4 @@ Route::delete('/course/{id}/homework/{homeworkId}', [HomeworkController::class, 
 Route::get('/course/{id}/homework/{homeworkId}', [TaskController::class, 'show']);
 Route::post('/course/{id}/homework/{homeworkId}/task/create', [TaskController::class, 'create']);
 Route::delete('/course/{id}/homework/{homeworkId}/task/{taskId}', [TaskController::class, 'destroy']);
+Route::get('/course/{id}/homework/{homeworkId}/download', [TaskController::class, 'downloadAll']);

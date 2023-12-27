@@ -21,4 +21,8 @@ class Task extends Model
     public function homework(){
         return $this->belongsTo(Homework::class);
     }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

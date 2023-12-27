@@ -38,7 +38,7 @@ class TaskController extends Controller
                 ]);
                 $task->save();
             } else{
-                $task = Task::create([
+                Task::create([
                     'author_id' => $user,
                     'homework_id' => $homeworkId,
                     'file_path' => $filePath,
@@ -70,7 +70,10 @@ class TaskController extends Controller
                     'finishTime' => $remainingTime
                 ]);
             } else {
-                $tasks = Task::where('homework_id', $homeworkId)->get();
+                $tasks = Task::where('homework_id', $homeworkId)
+                    ->join('users', 'users.id', '=', 'tasks.author_id')
+                    ->select('tasks.*', 'users.avatarPath', 'users.name', 'users.id as userId')
+                    ->get();
                 return view('/course/homework/tasks', [
                     'course' => $course,
                     'homework' => $homework,
@@ -80,6 +83,29 @@ class TaskController extends Controller
         }
 
         abort(404);
+    }
+
+    public function downloadAll($id, $homeworkId){
+        $homework = Homework::find($homeworkId);
+        $tasks = $homework->tasks;
+        $filepaths = [];
+        foreach ($tasks as $task){
+            $filepaths[$task->filename] = public_path($task->file_path);
+        }
+        //dd($filepaths);
+
+        $zipFilename = $homework->name . ".zip";
+        $zip = new \ZipArchive();
+        $zip->open(public_path($zipFilename), \ZipArchive::CREATE);
+
+        foreach($filepaths as $filename => $filepath){
+            //dd($filepath);
+            // nie dziala :<<
+            $zip->addFile($filepath, $filename);
+        }
+        $zip->close();
+
+        return response()->download(public_path($zipFilename))->deleteFileAfterSend(true);
     }
 
     public function destroy($id, $homeworkId, $taskId){
