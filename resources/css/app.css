@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.is-invalid{
+    color: #b91c1c;
+    border-color: #b91c1c;
+}
+
 .avatar-img:hover, .change-avatar:hover + .avatar-img{
     opacity: 0.5;
 }
@@ -25,4 +30,10 @@
 
 .profile-picture:hover .change-avatar{
     opacity: 1;
+}
+
+@media screen and (max-width: 600px){
+    .mg-top{
+        margin-top: 30px;
+    }
 }

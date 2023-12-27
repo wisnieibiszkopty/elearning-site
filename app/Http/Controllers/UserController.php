@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Rules\PasswordRule;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -19,13 +21,21 @@ class UserController extends Controller
     }
 
     public function store(Request $request){
-        $form = $request->validate([
-            'name' => ['required'],
-            'email' => [],
-            'password' => ['required', 'confirmed'],
-            'role' => [],
-            'company' => []
-        ]);
+        $rules = [
+            'name' => ['required', 'min:6', 'max:32'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'confirmed', new PasswordRule],
+            'role' => ['required'],
+            'company' => ['required', 'min:3', 'max:256']
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+            return redirect('/register')->withErrors($validator)->withInput();
+        }
+
+        $form = $validator->validate();
 
         $form['password'] = bcrypt($form['password']);
         $form['role'] = $form['role'] == 'student' ? 0 : 1;
@@ -98,8 +108,8 @@ class UserController extends Controller
     // add message to back()
     public function password(Request $request){
         $passwordForm = $request->validate([
-            'old-password' => ['required'],
-            'new-password' => ['required', 'confirmed']
+            'old-password' => ['required', new PasswordRule],
+            'new-password' => ['required', 'confirmed', new PasswordRule]
         ]);
 
         $user = User::find(auth()->id());

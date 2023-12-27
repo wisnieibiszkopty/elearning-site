@@ -18,12 +18,14 @@
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
-            <h3>Change profile picture</h3>
+            <h3 class="text-2xl">Change profile picture</h3><br>
             <form method="POST" action="/user/{{ $user->id }}/avatar" enctype="multipart/form-data">
                 @method('patch')
                 @csrf
-                <input type="file" name="avatar" class="file-input file-input-bordered w-full max-w-xs" />
-                <button class="btn btn-secondary">Change</button>
+                <div class="flex space-x-4 w-full">
+                    <input type="file" name="avatar" class="file-input file-input-bordered w-full max-w-xs" />
+                    <button class="btn btn-secondary w-1/4">Change</button>
+                </div>
             </form>
         </div>
     </dialog>
@@ -45,7 +47,7 @@
     @else
         <button class="btn btn-primary">Message</button>
     @endif
-
+    <!--
     <div class="stats shadow">
         <div class="stat place-items-center">
             <div class="stat-title">Name</div>
@@ -60,5 +62,6 @@
             <div class="stat-value">{{ $user->company }}</div>
         </div>
     </div>  
+-->
 </div>
 @endsection

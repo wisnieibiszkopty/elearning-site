@@ -8,6 +8,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-    @yield('content')
+    <div class="bg-base-200">
+        @yield('content')
+    </div>
 </body>
 </html>
