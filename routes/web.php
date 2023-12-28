@@ -49,6 +49,7 @@ Route::get('/course/{id}', [CourseController::class, 'show'])->middleware(['auth
 Route::get('/course/{id}/edit', [CourseController::class, 'edit'])->middleware(['auth', 'author']);
 Route::patch('/course/{id}/image', [CourseController::class, 'image'])->middleware(['auth', 'author']);
 Route::put('/course/{id}', [CourseController::class, 'update'])->middleware(['auth', 'author']);
+Route::delete('/course/{id}/leave', [CourseController::class, 'leave'])->middleware(['auth', 'member']);
 Route::delete('/course/{id}', [CourseController::class, 'destroy'])->middleware(['auth', 'author']);
 
 // Routes for managing posts

@@ -13,7 +13,7 @@ export default {
     extend: {},
   },
     daisyui: {
-        themes: ["dracula", "winter"]
+        themes: ["dracula", "winter", "cyberpunk"]
     },
   plugins: [require("daisyui")],
 }

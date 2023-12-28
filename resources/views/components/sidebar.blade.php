@@ -18,10 +18,15 @@
                 <span><i class="fa-solid fa-magnifying-glass"></i></span>
                 <span>OpenAI</span>
             </a></li>
-            <li><a href="/auth/logout" class="group">
-                <span><i class="fa-solid fa-right-from-bracket"></i></span>
-                <span>Logout</span>
-            </a></li>
+            <li>
+                <form method="POST" action="/auth/logout">
+                    @csrf
+                    <button>
+                        <span><i class="fa-solid fa-right-from-bracket"></i></span>
+                        <span>Logout</span>
+                    </button>
+                </form>    
+            </li>
         </ul>
     </aside>
 </div>

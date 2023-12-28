@@ -122,6 +122,16 @@ class CourseController extends Controller
         return back();
     }
 
+    public function leave(int $id){
+
+        $course = Course::find($id);
+        $userId = auth()->id();
+        if($userId != $course->author_id){
+            $course->members()->detach($userId);
+        }
+        return back();
+    }
+
     public function destroy(int $id){
         $course = Course::find($id);
         if($course->author_id == auth()->id()){

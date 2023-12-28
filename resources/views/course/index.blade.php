@@ -4,12 +4,14 @@
 
 @section('main')
     @if($role == 1)
-        <div>
+        <div class="flex justify-end m-5">
             <a href="/course/create"><button class="btn btn-primary">Add course</button></a>
         </div>
     @else($role == 0)
-        <div class="flex justify-end m-10">
-            <button class="btn btn-primary" onclick="join_modal.showModal()">Join course</button>
+        <div class="flex justify-end m-5">
+            <div class="flex justify-end">
+                <button class="btn btn-primary" onclick="join_modal.showModal()">Join course</button>
+            </div>
             <dialog id="join_modal" class="modal">
                 <div class="modal-box">
                     <form method="dialog">
@@ -29,7 +31,7 @@
             </dialog>
         </div>
     @endif
-    <div class="collapse collapse-arrow bg-base-200">
+    <!-- <div class="collapse collapse-arrow bg-base-200">
         <input type="checkbox"> 
         <div class="collapse-title text-xl font-medium">
             Filters
@@ -37,16 +39,10 @@
         <div class="collapse-content"> 
             <p>jazda</p>
         </div>
-    </div>
-    <!-- Just to check if it works, styles, etc will be added later-->
-    <div>
+    </div> -->
+    <div class="grid-container grid">
         @forelse($courses as $course)
-            <div>
-                <a href="/course/{{ $course->id }}">
-                    <h1>{{ $course->title }}</h1>
-                </a>
-                <p>{{ $course->author_id }}</p>
-            </div>
+            <x-course-item :course="$course"></x-course-item>
         @empty
             <h1>It seems that you don't join any courses yet</h1>
         @endforelse

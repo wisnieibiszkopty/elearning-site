@@ -68,7 +68,7 @@ class UserController extends Controller
     }
 
     public function show($id): View{
-        $user = User::find($id, ['id', 'name', 'email', 'company', 'role', 'avatarPath']);
+        $user = User::find($id, ['id', 'name', 'email', 'company', 'role', 'avatarPath', 'created_at']);
 
         if($user){
             return view('user.show', ['user' => $user]);

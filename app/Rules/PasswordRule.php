@@ -4,7 +4,6 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-// sklej pizde działa
 class PasswordRule implements Rule{
     public function passes($atrribute, $value){
         $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/';
