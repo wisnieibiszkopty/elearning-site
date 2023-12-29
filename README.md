@@ -2,6 +2,14 @@ final project created for classes at the university using Laravel.
 
 Rember to run Apache and mysql servers, and make sure that you have database called 'e-learning'. After that run: 
 ```bash
+npm run dev
+```
+or
+```bash
+yarn dev
+```
+and
+```bash
 php artisan migrate
 ```
 to create all tables in that database.
