@@ -58,11 +58,11 @@ class TaskController extends Controller
         $course = Course::find($id);
         $homework = Homework::find($homeworkId);
         $userId = auth()->id();
+        $remainingTime = self::getRemainingTime($homework->finish_date);
 
         if($homework && $course){
             if($homework->available && $userId != $course->author_id){
                 $task = Task::where('homework_id', $homeworkId)->where('author_id', $userId)->first();
-                $remainingTime = self::getRemainingTime($homework->finish_date);
                 return view('/course/homework/show', [
                     'course' => $course,
                     'homework' => $homework,
@@ -77,7 +77,8 @@ class TaskController extends Controller
                 return view('/course/homework/tasks', [
                     'course' => $course,
                     'homework' => $homework,
-                    'tasks' => $tasks
+                    'tasks' => $tasks,
+                    'finishTime' => $remainingTime
                 ]);
             }
         }

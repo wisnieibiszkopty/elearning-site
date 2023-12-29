@@ -4,13 +4,20 @@
 
 @section('course')
     <x-course-menu :authorId="$course->author_id" :id="$course->id" active="3"></x-course-menu>
-    <h1>{{$homework->name}}</h1>
-    <p>{{$homework->description}}</p>
-    <br>
-    <h1>Sended tasks</h1>
-    <a href="/course/{{$course->id}}/homework/{{$homework->id}}/download">
-        <button class="btn btn-secondary">Download all</button>
-    </a><br>
+    <div class="flex flex-col md:flex-row items-center mb-10">
+        <div class="card-body">
+            <h2 class="card-title">{{$homework->name}}</h2>
+            <p>{{$homework->description}}</p>
+            <p>Deadline: {{$homework->finish_date}}</p>
+            <p>Remaining time: {{$finishTime > 0 ? $finishTime : "Task closed"}}</p>
+        </div>
+        <div>
+            <a href="/course/{{$course->id}}/homework/{{$homework->id}}/download">
+                <button class="btn btn-secondary">Download all</button>
+            </a>
+        </div>
+    </div>
+    <h1 class="text-3xl">Sended tasks</h1>
     @foreach($tasks as $task)
         <!--
             Chcemy mieć nazwe pliku i ścieżke do pobrania, przycisk do pobierania wszystkich,

@@ -14,7 +14,7 @@
                 <span><i class="fa-regular fa-comment"></i></span>
                 <span>Chats</span>
             </a></li>
-            <li><a href="" class="group">
+            <li><a href="/openai" class="group">
                 <span><i class="fa-solid fa-magnifying-glass"></i></span>
                 <span>OpenAI</span>
             </a></li>

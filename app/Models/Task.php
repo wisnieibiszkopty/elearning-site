@@ -22,7 +22,7 @@ class Task extends Model
         return $this->belongsTo(Homework::class);
     }
 
-    public function user(){
+    public function author(){
         return $this->belongsTo(User::class);
     }
 }

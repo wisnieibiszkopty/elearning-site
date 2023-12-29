@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatGPTController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\HomeworkController;
@@ -84,3 +85,6 @@ Route::get('/course/{id}/homework/{homeworkId}', [TaskController::class, 'show']
 Route::post('/course/{id}/homework/{homeworkId}/task/create', [TaskController::class, 'create']);
 Route::delete('/course/{id}/homework/{homeworkId}/task/{taskId}', [TaskController::class, 'destroy']);
 Route::get('/course/{id}/homework/{homeworkId}/download', [TaskController::class, 'downloadAll']);
+
+Route::get('/openai', [ChatGPTController::class, 'index'])->middleware('auth');
+Route::post('/openai', [ChatGPTController::class, 'prompt'])->middleware('auth');
