@@ -31,7 +31,7 @@
             <img src="{{asset('images/svgs/svg2.svg')}}" class="mt-20">
         </div>
     </div>
-    <div class="card w-96 bg-base-100 shadow-xl my-5">
+    <div class="card w-96 bg-base-100 shadow-xl my-5 ">
         <div class="card-body">
             <h2 class="card-title">Talk to your friend</h2>
             <p>Connect with fellow users through our chat feature, facilitating real-time communication. Engage in discussions, seek assistance, or collaborate on projects. Enhance your learning experience by interacting with a vibrant community of students and teachers.</p>
@@ -66,7 +66,7 @@
             <a href="https://www.linkedin.com/in/kamil-wodowski-594a61298/" target="_blank"><i class="fa-brands fa-linkedin text-3xl"></i></a>
             <a></a>
         </div>
-    </nav> 
+    </nav>
     <aside>
         <p>Copyright © 2023 - Kamil Wodowski</p>
     </aside>

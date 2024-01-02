@@ -10,15 +10,47 @@
         </div>
     </div>
     <div >
-        <form method="POST" action="/openai" class="flex space-x-4">
+        <form method="POST" action="/openai">
             @csrf
-            <input type="text" id="prompt" required placeholder="Type your message..." name="prompt" autocomplete="off" class="input input-bordered w-60 max-w-xs">
-            <input type="submit" value="Send" class="btn btn-primary">
+            <input type="text" id="prompt" name="prompt" required placeholder="Type your message..." autocomplete="off" class="input input-bordered w-60 max-w-xs">
+            <button class="btn btn-secondary" type="submit">Send</button>
         </form>
     </div>
     <div class="messages">
-        <div class="left-message my-3">
-            <p>Hello!</p>
+        <div class="chat chat-start">
+            <div class="chat-bubble">Hello!</div>
         </div>
     </div>
 @endsection
+{{--<script>--}}
+{{--    $("form").submit(function (event) {--}}
+{{--        event.preventDefault();--}}
+{{--        $("form #message").prop('disabled', true);--}}
+{{--        $("form button").prop('disabled', true);--}}
+
+{{--        $.ajax({--}}
+{{--           url: '/openai',--}}
+{{--           method: 'POST',--}}
+{{--           headers: {--}}
+{{--               'X-CSRF-TOKEN': "{{csrf_token()}}"--}}
+{{--           },--}}
+{{--            data: {--}}
+{{--               'content': $("form #message").val()--}}
+{{--            }--}}
+{{--        }).done(function(res){--}}
+{{--            console.log(res);--}}
+{{--            $(".messages > .message").last().after('<div class="chat chat-end"><div class="chat-bubble">' +--}}
+{{--                '<p>' + $("form #message").val() + '</p>' +--}}
+{{--                '</div></div>');--}}
+
+{{--            $(".messages > .message").last().after('<div class="chat chat-start"><div class="chat-bubble">' +--}}
+{{--                '<p>' + res + '</p>' +--}}
+{{--                '</div></div>');--}}
+
+{{--            $("form #message").val('');--}}
+{{--            $(document).scrollTop($(document).height());--}}
+{{--            $("form #message").prop('disabled', false);--}}
+{{--            $("form button").prop('disabled', false);--}}
+{{--        });--}}
+{{--    });--}}
+{{--</script>--}}

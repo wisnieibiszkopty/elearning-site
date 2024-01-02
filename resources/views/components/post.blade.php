@@ -1,21 +1,16 @@
-<!--
-    important if comment was edited time doesnt change, do something to other users see 
-    that post was edited
---> 
-
 <div class="flex items-center space-x-4 w-full justify-between my-5">
     <div>
         <div class="flex space-x-4">
             <div class="avatar">
-                <div class="w-12 rounded-full">
-                    <img class="avatar" src="{{ $post->avatarPath ? asset('storage/' . $post->avatarPath) : asset('images/avatar-placeholder.jpg') }}" alt="User profile picture">
+                <div class="w-12 h-12 rounded-full">
+                    <img class="avatar" src="{{ $post->author->avatarPath ? asset('storage/' . $post->author->avatarPath) : asset('images/avatar-placeholder.jpg') }}" alt="User profile picture">
                 </div>
-            </div> 
-            <div>
-                <div><a href="/user/{{$post->author_id}}"><p>{{$post->name}}</a></div>
-                <div><p>{{ $post->created_at}}</p></div>
             </div>
-        </div> 
+            <div>
+                <div><a class="link link-secondary" href="/user/{{$post->author_id}}"><p>{{$post->author->name}}</a></div>
+                <div><p>@if(!$post->edited){{ $post->created_at}}@else{{$post->updated_at }} (edited)@endif</p></div>
+            </div>
+        </div>
         <div class="mt-2  ml-3">
             <p>{{$post->content}}</p>
         </div>
@@ -30,6 +25,12 @@
                 </form>
             </div>
         </details>
+        <!-- comments -->
+        <div class="ml-10">
+            @foreach($post->comments->reverse() as $comment)
+                <x-comment :comment="$comment" :courseAuthor="$courseAuthor" :courseId="$courseId" :postId="$post->id"></x-comment>
+            @endforeach
+        </div>
     </div>
     <!-- manage post -->
     @if($post->author_id == auth()->id() || $courseAuthor == auth()->id())

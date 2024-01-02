@@ -31,15 +31,6 @@
             </dialog>
         </div>
     @endif
-    <!-- <div class="collapse collapse-arrow bg-base-200">
-        <input type="checkbox"> 
-        <div class="collapse-title text-xl font-medium">
-            Filters
-        </div>
-        <div class="collapse-content"> 
-            <p>jazda</p>
-        </div>
-    </div> -->
     <div class="grid-container grid">
         @forelse($courses as $course)
             <x-course-item :course="$course"></x-course-item>

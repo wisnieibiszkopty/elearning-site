@@ -46,8 +46,9 @@
 }
 
 #blob{
+    overflow-x: hidden;
     background-color: white;
-    height: 500px;
+    height: 100%;
     aspect-ratio: 1;
     position: absolute;
     left: 50%;

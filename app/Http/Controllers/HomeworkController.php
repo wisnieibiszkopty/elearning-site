@@ -6,6 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\Homework;
 
+/*
+ *
+ *  Edytowania i usuwania nie ma
+ * poza tym bez wiekszych problemow
+ *
+ */
+
 class HomeworkController extends Controller
 {
     public function index(int $id){
@@ -20,10 +27,13 @@ class HomeworkController extends Controller
 
     public function store(Request $request, int $id){
         $form = $request->validate([
-            'name' => ['required'],
+            'name' => ['required', 'min:3'],
             'description' => [],
-            'finishDate' => []
+            'finishDate' => ['required'],
+            'available' => ['required']
         ]);
+
+
 
         $homework = new Homework();
 
@@ -54,7 +64,7 @@ class HomeworkController extends Controller
     public function edit(int $id, int $homeworkId){
         $course = Course::find($id);
         $homework = Homework::find($homeworkId);
-        return view('/course/homework/edit', [
+        return view('/course/homework/update', [
             'course' => $course,
             'homework' => $homework
         ]);

@@ -8,7 +8,7 @@
                     </div>
                 </div>
                 <div>
-                    <a href="/course/{{$course->id}}"><h2 class="text-lg">{{$course->title}}</h2></a>
+                    <a href="/course/{{$course->id}}/posts"><h2 class="text-lg">{{$course->title}}</h2></a>
                 </div>
                 <div>
                     <div class="dropdown dropdown-bottom dropdown-end">
@@ -24,7 +24,7 @@
                                         @method('delete')
                                         @csrf
                                         <button>Exit course</button>
-                                    </form> 
+                                    </form>
                                 </li>
                             @endif
                         </ul>
@@ -41,6 +41,6 @@
                     <span>{{count($course->members)}}</span>
                 </div>
             </div>
-        </div>  
+        </div>
     </div>
 </div>

@@ -7,6 +7,13 @@ use App\Models\Course;
 use App\Models\Resource;
 use Illuminate\Support\Facades\Storage;
 
+/*
+ *
+ *  działa git, tylko popraw cssy
+ *  i zrób coś z usuwaniem plików z aplikacji
+ *
+ */
+
 class ResourceController extends Controller
 {
     // add pagination
@@ -31,7 +38,7 @@ class ResourceController extends Controller
             'file_path' => $filePath
         ]);
         $resource->save();
-        
+
         return back();
     }
 

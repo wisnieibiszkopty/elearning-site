@@ -12,7 +12,8 @@ class Post extends Model
     protected $fillable = [
         'course_id',
         'author_id',
-        'content'
+        'content',
+        'edited'
     ];
 
     public function course(){

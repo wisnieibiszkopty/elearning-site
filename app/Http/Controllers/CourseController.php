@@ -8,7 +8,12 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-use function Laravel\Prompts\select;
+/*
+ *
+ *  Dodaj bledy w widoku dodawania kursu i edycji
+ *  napraw ten show zasrany
+ */
+
 
 class CourseController extends Controller
 {
@@ -32,9 +37,9 @@ class CourseController extends Controller
 
     public function store(Request $request){
         $form = $request->validate([
-            'title' => [],
-            'description' => [],
-            'code' => []
+            'title' => ['required', 'min:3'],
+            'description' => ['required', 'min:3'],
+            'code' => ['required', 'min:3']
         ]);
 
         $course = new Course([
@@ -45,7 +50,6 @@ class CourseController extends Controller
         ]);
 
         if($course->save()){
-
             // author of the course also has to be member of it to pass authentication
             $course->members()->attach(auth()->id());
             return redirect('course/' . $course->id);
@@ -53,41 +57,20 @@ class CourseController extends Controller
     }
 
     // method for adding user to course, based on members table
-    // add error message
     public function join(Request $request){
         $entryCode = $request['code'];
         $course = Course::where('code', $entryCode)->firstOrFail();
         if($course){
             $userId = auth()->id();
-            // check if user isnt already in course
+            // check if user isn't already in course
             if(!$course->members()->where('user_id', $userId)->exists()){
-                $course->members()->attach($userId);   
+                $course->members()->attach($userId);
             }
 
             return redirect('course/' . $course->id);
         }
 
         return back();
-    }
-
-    // i'm not sure how to get data from 3 tables with orm
-    // chuj wie jak to napisać, zrobie sobie przerwe z tym
-    public function show(int $id){
-        $course = Course::find($id);
-        //$course = Course::with(['posts.author:name,created_at,avatarPath'])->find($id);
-        $posts = DB::table('posts') 
-            ->where('course_id', $id)
-            ->join('users', 'author_id', '=', 'users.id')
-            //->leftJoin('comments', 'posts.id', '=', 'comments.post_id')
-            //->join('users as comment_user', 'comments.author_id', '=', 'comment_user.id')
-            ->select('posts.*', 'users.name', 'users.avatarPath')
-            //'comments.*', 'comment_user.name as comment_name', 'comment_user.avatarPath as comment_avatar')
-            ->orderByDesc('created_at')
-            //->get();
-            ->paginate(10);
-        //dd($posts);
-        return view('course/posts', ['course' => $course,
-                                    'posts' => $posts]);
     }
 
     public function edit(int $id){
@@ -107,9 +90,9 @@ class CourseController extends Controller
 
     public function update(Request $request, int $id){
         $form = $request->validate([
-            'title' => [],
-            'code' => [],
-            'description' => []
+            'title' => ['required', 'min:3'],
+            'code' => ['required', 'min:3'],
+            'description' => ['required', 'min:3']
         ]);
 
         $course = Course::find($id);
@@ -123,7 +106,6 @@ class CourseController extends Controller
     }
 
     public function leave(int $id){
-
         $course = Course::find($id);
         $userId = auth()->id();
         if($userId != $course->author_id){
@@ -135,7 +117,7 @@ class CourseController extends Controller
     public function destroy(int $id){
         $course = Course::find($id);
         if($course->author_id == auth()->id()){
-            $course->destroy();
+            $course->delete();
             return redirect('/course');
         }
 

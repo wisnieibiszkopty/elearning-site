@@ -46,7 +46,6 @@ Route::get('/course/create', [CourseController::class, 'create'])->middleware(['
 Route::post('/course', [CourseController::class, 'store'])->middleware(['auth', 'teacher']);
 Route::post('/course/join', [CourseController::class, 'join'])->middleware('auth');
 Route::get('/course', [CourseController::class, 'index'])->middleware('auth');
-Route::get('/course/{id}', [CourseController::class, 'show'])->middleware(['auth', 'member']);
 Route::get('/course/{id}/edit', [CourseController::class, 'edit'])->middleware(['auth', 'author']);
 Route::patch('/course/{id}/image', [CourseController::class, 'image'])->middleware(['auth', 'author']);
 Route::put('/course/{id}', [CourseController::class, 'update'])->middleware(['auth', 'author']);
@@ -54,7 +53,7 @@ Route::delete('/course/{id}/leave', [CourseController::class, 'leave'])->middlew
 Route::delete('/course/{id}', [CourseController::class, 'destroy'])->middleware(['auth', 'author']);
 
 // Routes for managing posts
-Route::get('/course/{id}/posts', [PostController::class, 'index'])->middleware(['auth', 'member']);
+Route::get('/course/{id}/posts', [PostController::class, 'show'])->middleware(['auth', 'member']);
 Route::post('/course/{id}/posts/create', [PostController::class, 'store'])->middleware(['auth', 'member']);
 Route::put('/course/{id}/posts/{postId}', [PostController::class, 'update'])->middleware(['auth', 'member']);
 Route::delete('/course/{id}/posts/{postId}', [PostController::class, 'destroy'])->middleware(['auth', 'member']);
@@ -62,7 +61,7 @@ Route::delete('/course/{id}/posts/{postId}', [PostController::class, 'destroy'])
 // Routes for managing comments
 // not working yet
 Route::post('/course/{id}/posts/{postId}/comments/create', [CommentController::class, 'store'])->middleware(['auth', 'member']);
-Route::put('/course/{id}/posts/{postId}/comments/{commentId}', [CommentController::class, 'update'])->middleware(['auth', 'member']);
+Route::put('/course/{id}/comments/{commentId}', [CommentController::class, 'update'])->middleware(['auth', 'member']);
 Route::delete('/course/{id}/posts/{postId}/comments/{commentId}', [CommentController::class, 'destroy'])->middleware(['auth', 'member']);
 
 // Routes for managing resources in course
@@ -83,6 +82,7 @@ Route::delete('/course/{id}/homework/{homeworkId}', [HomeworkController::class, 
 // Routes for managing task
 Route::get('/course/{id}/homework/{homeworkId}', [TaskController::class, 'show']);
 Route::post('/course/{id}/homework/{homeworkId}/task/create', [TaskController::class, 'create']);
+Route::post('/course/{id}/homework/{homeworkId}/task/{taskId}/comment', [TaskController::class, 'comment']);
 Route::delete('/course/{id}/homework/{homeworkId}/task/{taskId}', [TaskController::class, 'destroy']);
 Route::get('/course/{id}/homework/{homeworkId}/download', [TaskController::class, 'downloadAll']);
 

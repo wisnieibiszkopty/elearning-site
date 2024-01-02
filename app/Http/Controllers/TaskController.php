@@ -8,6 +8,10 @@ use App\Models\Course;
 use App\Models\Homework;
 use Carbon\Carbon;
 
+/*
+ * Z czasem jest w chuj problemow
+ */
+
 class TaskController extends Controller
 {
     private function getRemainingTime($finishDate): string{
@@ -84,6 +88,18 @@ class TaskController extends Controller
         }
 
         abort(404);
+    }
+
+    public function comment(Request $request, $id, $homeworkId, $taskId){
+        $form = $request->validate([
+            'comment' => ['required', 'min:3']
+        ]);
+
+        $task = Task::find($taskId);
+        $task->comment = $form['comment'];
+        $task->save();
+
+        return back();
     }
 
     public function downloadAll($id, $homeworkId){
