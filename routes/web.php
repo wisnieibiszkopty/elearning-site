@@ -9,6 +9,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\GoogleAuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,13 +22,14 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 |   Plan działania:
-|   1. Poprawić homework / tasks
+|   1. Zrób coś z obliczaniem czasu żeby było w oddzielnym pliku
 |   2. Naprawić usuwanie plików ze storage
 |   3. Poprawić style
 |   4. Poprawić query do posts
 |   5. Dodać chat
 |   6. Dodać integracje z chatemgpt
 |   8. dziwny problem posty w obrębie jednego paginate są odwrócone ale ogółem to już nie
+|   9. autoryzacja z google
 |
 */
 
@@ -42,6 +44,8 @@ Route::middleware('guest')->group(function(){
     // routes for doing authorization
     Route::post('/auth/login', [UserController::class, 'auth']);
     Route::post('/auth/register', [UserController::class, 'store']);
+    Route::get('/auth/redirect', [GoogleAuthController::class, 'redirect']);
+    Route::get('/auth/callback', [GoogleAuthController::class, 'callback']);
 });
 
 // routes only for authenticated users
@@ -79,21 +83,23 @@ Route::middleware('auth')->group(function(){
             Route::delete('/', 'destroy')->middleware(['author']);
         });
 
-        // Routes for managing posts
-        Route::controller(PostController::class)->group(function(){
-            Route::prefix('posts')->group(function(){
-                Route::get('/', 'show')->middleware(['member']);
-                Route::post('/create', 'store')->middleware(['member']);
-                Route::put('/{postId}', 'update')->middleware(['member']);
-                Route::delete('/{postId}', 'destroy')->middleware(['member']);
+        Route::middleware('member')->group(function(){
+            // Routes for managing posts
+            Route::controller(PostController::class)->group(function(){
+                Route::prefix('posts')->group(function(){
+                    Route::get('/', 'show');
+                    Route::post('/create', 'store');
+                    Route::put('/{postId}', 'update');
+                    Route::delete('/{postId}', 'destroy');
+                });
             });
-        });
 
-        // Routes for managing comments
-        Route::controller(CommentController::class)->group(function(){
-            Route::post('/posts/{postId}/comments/create','store')->middleware(['member']);
-            Route::put('/comments/{commentId}', 'update')->middleware(['member']);
-            Route::delete('/posts/{postId}/comments/{commentId}', 'destroy')->middleware(['member']);
+            // Routes for managing comments
+            Route::controller(CommentController::class)->group(function(){
+                Route::post('/posts/{postId}/comments/create','store');
+                Route::put('/comments/{commentId}', 'update');
+                Route::delete('/posts/{postId}/comments/{commentId}', 'destroy');
+            });
         });
 
         // Routes for managing resources in course

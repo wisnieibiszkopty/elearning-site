@@ -22,6 +22,7 @@
                     <button class="btn btn-secondary my-3 px-10">Sign in</button>
                 </div>
             </form>
+            <a href="/auth/redirect" class="btn btn-primary"> Login with Google </a>
         </div>
     </div>
 </div>

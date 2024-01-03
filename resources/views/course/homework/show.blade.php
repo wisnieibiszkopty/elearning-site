@@ -9,7 +9,7 @@
             <h2 class="card-title">{{$homework->name}}</h2>
             <p>{{$homework->description}}</p>
             <p>Deadline: {{$homework->finish_date}}</p>
-            <p>Remaining time: {{$finishTime > 0 ? $finishTime : "Task closed"}}</p>
+            <p>Remaining time: {{$onTime ? $finishTime : "Task closed"}}</p>
         </div>
     </div>
     @isset($task->comment)
@@ -33,7 +33,7 @@
     </form>
     <!-- File is already added -->
     @else
-        @if('$task->sended_on_time')
+        @if($task->sended_on_time)
             <div class="badge badge-success">Sent on time</div>
         @else
             <div class="badge badge-error">Sent with delay</div>

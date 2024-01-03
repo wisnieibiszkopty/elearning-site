@@ -28,7 +28,8 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table){
             $table->id();
             $table->unsignedBigInteger('author_id');
-            $table->foreignId('homework_id')->constrained();
+            $table->unsignedBigInteger('homework_id');
+            //$table->foreignId('homework_id')->constrained();
             //$table->foreignId('author_id')->constrained();
             $table->string('file_path');
             $table->string('filename');
@@ -36,7 +37,7 @@ return new class extends Migration
             $table->string('comment');
             $table->timestamps();
 
-            //$table->foreign('homework_id')->references('id')->on('homework')->onDelete('cascade');
+            $table->foreign('homework_id')->references('id')->on('homework')->onDelete('cascade');
             $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

@@ -31,30 +31,30 @@ class TaskController extends Controller
         }
 
         return [$remainingTime->format('%Y-%m-%d %H:%I:%S'), $onTime];
-//        $currentTime = Carbon::now()->timestamp;
-//        $finishTime = Carbon::parse($finishDate)->timestamp;
-//        $remainingTime = $finishTime - $currentTime;
-//        return Carbon::createFromTimestamp($remainingTime)->format('H:i:s');
     }
 
     public function create(Request $request, $id, $homeworkId){
         if($request->hasFile('task-file')){
             $user = auth()->id();
-            $task = Task::where('homework_id', $homeworkId)->where('author_id', $user)->first();
+            $homework = Homework::find($homeworkId);
 
             // computing reamining time
-            $homework = Homework::find($homeworkId);
-            $remainingTime = self::getRemainingTime($homework->finish_date);
-            $onTime = $remainingTime > 0;
+            $time = self::getRemainingTime($homework->finish_date);
+            $onTime = $time[1];
 
+            // we have to store file in both cases -
+            // when user upload task and when user edit task
             $file = $request->file('task-file');
             $filePath = $file->store('tasks', 'public');
+
+            $task = Task::where('homework_id', $homeworkId)->where('author_id', $user)->first();
 
             // task exist so there is no need to create it again
             if($task){
                 $task->update([
                     'file_path' => $filePath,
-                    'filename' => $file->getClientOriginalName()
+                    'filename' => $file->getClientOriginalName(),
+                    'sended_on_time' => $onTime
                 ]);
                 $task->save();
             } else{
@@ -62,12 +62,12 @@ class TaskController extends Controller
                     'author_id' => $user,
                     'homework_id' => $homeworkId,
                     'file_path' => $filePath,
-                    'sended_on_time' => $onTime,
                     'filename' => $file->getClientOriginalName(),
+                    'sended_on_time' => $onTime,
                     'comment' => ''
                 ]);
 
-                return redirect('/course/' . $id . '/homework/' . $homeworkId);
+                return redirect('/course/' . $id . '/homework/' . $homeworkId . '/task');
             }
         }
 
@@ -80,8 +80,6 @@ class TaskController extends Controller
         $userId = auth()->id();
         $remainingTime = self::getRemainingTime($homework->finish_date);
 
-        //dd([$homework->finish_date, $remainingTime]);
-
         if($homework && $course){
             if($homework->available){
                 $task = Task::where('homework_id', $homeworkId)->where('author_id', $userId)->first();
@@ -89,7 +87,8 @@ class TaskController extends Controller
                     'course' => $course,
                     'homework' => $homework,
                     'task' => $task,
-                    'finishTime' => $remainingTime
+                    'finishTime' => $remainingTime[0],
+                    'onTime' => $remainingTime[1]
                 ]);
             }
         }
@@ -135,6 +134,6 @@ class TaskController extends Controller
     public function destroy($id, $homeworkId, $taskId){
         $task = Task::find($taskId);
         if($task) $task->delete();
-        return redirect('/course/' . $id . '/homework/' . $homeworkId);
+        return redirect('/course/' . $id . '/homework/' . $homeworkId . '/task');
     }
 }

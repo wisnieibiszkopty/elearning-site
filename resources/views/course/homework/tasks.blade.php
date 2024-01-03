@@ -9,17 +9,29 @@
             <h2 class="card-title text-2xl">{{$homework->name}}</h2>
             <p>{{$homework->description}}</p>
             <p>Deadline: {{$homework->finish_date}}</p>
-            <p>Remaining time: {{$finishTime > 0 ? $finishTime : "Task closed"}}</p>
+            <p>Remaining time: {{$onTime ? $finishTime : "Task closed"}}</p>
             <div class="badge badge-warning">{{ $homework->available ? 'available' : 'unavailable' }}</div>
         </div>
-        <div>
+        <div class="flex flex-col space-y-2 items-end">
             <a href="/course/{{$course->id}}/homework/{{$homework->id}}/edit">
                 <button class="btn btn-primary">Edit</button>
             </a>
+            <form method="POST" action="/course/{{$course->id}}/homework/{{$homework->id}}">
+                @method('delete')
+                @csrf
+                <button class="btn btn-warning">Delete</button>
+            </form>
             <a href="/course/{{$course->id}}/homework/{{$homework->id}}/download">
                 <button class="btn btn-secondary">Download all</button>
             </a>
         </div>
+    </div>
+    <div>
+        <h2 class="text-xl mb-4">Tasks sent:</h2>
+        @php
+        $ratio = $tasks->count() / $course->members->count() * 100;
+        echo '<div class="radial-progress text-primary" style="--value:'. $ratio .';" role="progressbar">'. $ratio .'%</div>';
+        @endphp
     </div>
     @error('comment')
         <p style="color:red;">Wrong comment format!</p>
@@ -46,15 +58,15 @@
                 <div class="flex space-x-4 mt-4">
                     @if($task->sended_on_time)
                         <div class="badge badge-success">
-                            Sended on time
+                            Sent on time
                         </div>
                     @else
                         <div class="badge badge-warning">
-                            Not sended on time
+                            Not sent on time
                         </div>
                     @endif
                     <div class="badge badge-neutral">
-                        {{$task->created_at}}
+                        {{$task->updated_at}}
                     </div>
                 </div>
             </div>

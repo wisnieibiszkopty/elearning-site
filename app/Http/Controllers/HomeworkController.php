@@ -9,13 +9,32 @@ use App\Models\Task;
 
 /*
  *
- *  Edytowania i usuwania nie ma
- * poza tym bez wiekszych problemow
- *
+ *  ale mam dospermiony pomysł
+ *  zrobie countdown w czasie rzeczywistym jak sie wchodzi i sprawdza czas
+ *  jakie sended debilu
+ *  if user didn't sent task on time, and finish date will be changed
+ *  so that user now sent task before that date, status won't change (fix in future)
  */
 
 class HomeworkController extends Controller
 {
+    private function getRemainingTime($finishDate): array{
+        $date = \DateTime::createFromFormat('Y-m-d H:i:s', $finishDate);
+        $now = new \DateTime();
+
+        if($date > $now){
+            // you can still upload task on time
+            $remainingTime = $now->diff($date);
+            $onTime = true;
+        } else {
+            // you're too late
+            $remainingTime = $date->diff($now);
+            $onTime = false;
+        }
+
+        return [$remainingTime->format('%d-%m-%Y %H:%I:%S'), $onTime];
+    }
+
     public function index(int $id){
         $course = Course::find($id);
         return view('course/homework/index', ['course' => $course]);
@@ -63,9 +82,9 @@ class HomeworkController extends Controller
         $course = Course::find($id);
         $homework = Homework::find($homeworkId);
 
-        dd($homework->finish_date);
-
-        $remainingTime = self::getRemainingTime($homework->finish_date);
+        $time = self::getRemainingTime($homework->finish_date);
+        $remainingTime = $time[0];
+        $onTime = $time[1];
 
         $tasks = Task::where('homework_id', $homeworkId)
             ->join('users', 'users.id', '=', 'tasks.author_id')
@@ -75,7 +94,8 @@ class HomeworkController extends Controller
             'course' => $course,
             'homework' => $homework,
             'tasks' => $tasks,
-            'finishTime' => $remainingTime
+            'finishTime' => $remainingTime,
+            'onTime' => $onTime
         ]);
     }
 
@@ -88,11 +108,43 @@ class HomeworkController extends Controller
         ]);
     }
 
-    public function update(){
+    public function update(Request $request, int $id, int $homeworkId){
+        $homework = Homework::find($homeworkId);
 
+        $form = $request->validate([
+            'name' => ['required', 'min:3'],
+            'description' => [],
+            'finishDate' => ['required'],
+        ]);
+
+        $homework->name = $form['name'];
+        $homework->description = $form['description'];
+        $homework->finish_date = $form['finishDate'];
+
+        if($request->has('available')){
+            $homework->available = true;
+        } else {
+            $homework->available = false;
+        }
+
+        // remember to delete old file
+        if($request->hasFile('file')){
+            $file = $request->file('file');
+            $filePath = $file->store('homework', 'public');
+            $homework->file_path = $filePath;
+        }
+
+        $homework->save();
+
+        return redirect('/course/' . $id . '/homework/' . $homeworkId . '/edit');
     }
 
-    public function destroy(){
+    public function destroy(int $id, int $homeworkId){
+        $homework = Homework::find($homeworkId);
+        if($homework){
+            $homework->delete();
+        }
 
+        return redirect('/course/' . $id . '/homework');
     }
 }
