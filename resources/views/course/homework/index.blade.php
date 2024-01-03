@@ -10,13 +10,20 @@
     </div>
     @endif
     @foreach($course->homework->reverse() as $homework)
+        @if($homework->available || auth()->id() == $course->author_id)
         <div class="card bg-base-200 m-4 shadow-lg">
             <div class="p-4">
-                <a href="/course/{{$course->id}}/homework/{{$homework->id}}">
+                <a href="/course/{{$course->id}}/homework/{{$homework->id}}{{ auth()->id() != $course->author_id ? "/task" : ""}}">
                     <h2 class="card-title">{{$homework->name}}</h2>
                 </a>
                 <p>Deadline: {{$homework->finish_date}}</p>
+                @if(auth()->id() == $course->author_id)
+                    <div class="badge badge-warning">
+                        {{ $homework->available ? 'available' : 'unavailable' }}
+                    </div>
+                @endif
             </div>
         </div>
+        @endif
     @endforeach
 @endsection

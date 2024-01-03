@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,72 +20,125 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
 |
+|   Plan działania:
+|   1. Poprawić homework / tasks
+|   2. Naprawić usuwanie plików ze storage
+|   3. Poprawić style
+|   4. Poprawić query do posts
+|   5. Dodać chat
+|   6. Dodać integracje z chatemgpt
+|   8. dziwny problem posty w obrębie jednego paginate są odwrócone ale ogółem to już nie
+|
 */
 
 Route::get('/', function () {
     return view('index');
 })->name('home')->middleware('guest');
 
-// Routes for user authentication
-Route::get('/register', [UserController::class, 'register'])->middleware('guest');
-Route::get('/login', [UserController::class, 'login'])->name('login')->middleware('guest');
+Route::middleware('guest')->group(function(){
+    // routes for getting forms views
+    Route::get('/register', [UserController::class, 'register']);
+    Route::get('/login', [UserController::class, 'login'])->name('login');
+    // routes for doing authorization
+    Route::post('/auth/login', [UserController::class, 'auth']);
+    Route::post('/auth/register', [UserController::class, 'store']);
+});
 
-Route::post('/auth/login', [UserController::class, 'auth'])->middleware('guest');
-Route::post('/auth/register', [UserController::class, 'store'])->middleware('guest');
-Route::post('/auth/logout', [UserController::class, 'logout'])->middleware('auth');
+// routes only for authenticated users
+Route::middleware('auth')->group(function(){
+    Route::post('/auth/logout', [UserController::class, 'logout']);
 
-// Routes for managing users
-Route::get('/user/{id}', [UserController::class, 'show'])->middleware('auth');
-Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth');
-Route::get('/user/{id}/edit', [UserController::class, 'edit'])->middleware('auth');
-Route::patch('/user/{id}/avatar', [UserController::class, 'avatar'])->middleware('auth');
-Route::patch('/user/{id}/password', [UserController::class, 'password'])->middleware('auth');
-Route::put('/user/{id}', [UserController::class, 'update']);
+    // Routes for managing users
+    Route::controller(UserController::class)->group(function(){
+        Route::get('/user/{id}', 'show');
+        Route::delete('/user/{id}', 'destroy');
+        Route::get('/user/{id}/edit', 'edit');
+        Route::patch('/user/{id}/avatar', 'avatar');
+        Route::patch('/user/{id}/password', 'password');
+        Route::put('/user/{id}', 'update');
+    });
 
-// Routes for managing courses
-Route::get('/course/create', [CourseController::class, 'create'])->middleware(['auth', 'teacher']);
-Route::post('/course', [CourseController::class, 'store'])->middleware(['auth', 'teacher']);
-Route::post('/course/join', [CourseController::class, 'join'])->middleware('auth');
-Route::get('/course', [CourseController::class, 'index'])->middleware('auth');
-Route::get('/course/{id}/edit', [CourseController::class, 'edit'])->middleware(['auth', 'author']);
-Route::patch('/course/{id}/image', [CourseController::class, 'image'])->middleware(['auth', 'author']);
-Route::put('/course/{id}', [CourseController::class, 'update'])->middleware(['auth', 'author']);
-Route::delete('/course/{id}/leave', [CourseController::class, 'leave'])->middleware(['auth', 'member']);
-Route::delete('/course/{id}', [CourseController::class, 'destroy'])->middleware(['auth', 'author']);
+    Route::prefix('course')->group(function(){
+        // Routes for managing courses
+        Route::controller(CourseController::class)->group(function(){
+            Route::post('/join', 'join');
+            Route::get('/', 'index');
+            Route::get('/create','create')->middleware(['teacher']);
+            Route::post('/', 'store')->middleware(['teacher']);
+        });
+    });
 
-// Routes for managing posts
-Route::get('/course/{id}/posts', [PostController::class, 'show'])->middleware(['auth', 'member']);
-Route::post('/course/{id}/posts/create', [PostController::class, 'store'])->middleware(['auth', 'member']);
-Route::put('/course/{id}/posts/{postId}', [PostController::class, 'update'])->middleware(['auth', 'member']);
-Route::delete('/course/{id}/posts/{postId}', [PostController::class, 'destroy'])->middleware(['auth', 'member']);
+    Route::prefix('/course/{id}')->group(function(){
 
-// Routes for managing comments
-// not working yet
-Route::post('/course/{id}/posts/{postId}/comments/create', [CommentController::class, 'store'])->middleware(['auth', 'member']);
-Route::put('/course/{id}/comments/{commentId}', [CommentController::class, 'update'])->middleware(['auth', 'member']);
-Route::delete('/course/{id}/posts/{postId}/comments/{commentId}', [CommentController::class, 'destroy'])->middleware(['auth', 'member']);
+        // routes for managing specific course
+        Route::controller(CourseController::class)->group(function(){
+            Route::get('/edit', 'edit')->middleware(['author']);
+            Route::patch('/image', 'image')->middleware(['author']);
+            Route::put('/', 'update')->middleware(['author']);
+            Route::delete('/leave', 'leave')->middleware(['member']);
+            Route::delete('/', 'destroy')->middleware(['author']);
+        });
 
-// Routes for managing resources in course
-// think about some secuirty rules for uploaded files
-Route::get('/course/{id}/resources', [ResourceController::class, 'index'])->middleware(['auth', 'member']);
-Route::post('/course/{id}/resources/create', [ResourceController::class, 'store'])->middleware(['auth', 'author']);
-Route::put('/course/{id}/resources/{resourceId}', [ResourceController::class, 'update'])->middleware(['auth', 'author']);
-Route::delete('/course/{id}/resources/{resourceId}', [ResourceController::class, 'destroy'])->middleware(['auth', 'author']);
+        // Routes for managing posts
+        Route::controller(PostController::class)->group(function(){
+            Route::prefix('posts')->group(function(){
+                Route::get('/', 'show')->middleware(['member']);
+                Route::post('/create', 'store')->middleware(['member']);
+                Route::put('/{postId}', 'update')->middleware(['member']);
+                Route::delete('/{postId}', 'destroy')->middleware(['member']);
+            });
+        });
 
-// Routes for managing homework
-Route::get('/course/{id}/homework', [HomeworkController::class, 'index']);
-Route::get('/course/{id}/homework/create', [HomeworkController::class, 'create']);
-Route::post('/course/{id}/homework', [HomeworkController::class, 'store']);
-Route::get('/course/{id}/homework/{homeworkId}/edit', [HomeworkController::class, 'edit']);
-Route::put('/course/{id}/homework/{homeworkId}', [HomeworkController::class, 'update']);
-Route::delete('/course/{id}/homework/{homeworkId}', [HomeworkController::class, 'destroy']);
+        // Routes for managing comments
+        Route::controller(CommentController::class)->group(function(){
+            Route::post('/posts/{postId}/comments/create','store')->middleware(['member']);
+            Route::put('/comments/{commentId}', 'update')->middleware(['member']);
+            Route::delete('/posts/{postId}/comments/{commentId}', 'destroy')->middleware(['member']);
+        });
 
-// Routes for managing task
-Route::get('/course/{id}/homework/{homeworkId}', [TaskController::class, 'show']);
-Route::post('/course/{id}/homework/{homeworkId}/task/create', [TaskController::class, 'create']);
-Route::post('/course/{id}/homework/{homeworkId}/task/{taskId}/comment', [TaskController::class, 'comment']);
-Route::delete('/course/{id}/homework/{homeworkId}/task/{taskId}', [TaskController::class, 'destroy']);
-Route::get('/course/{id}/homework/{homeworkId}/download', [TaskController::class, 'downloadAll']);
+        // Routes for managing resources in course
+        Route::controller(ResourceController::class)->group(function(){
+            Route::prefix('/resources')->group(function(){
+                Route::get('/', 'index')->middleware(['member']);
+                Route::post('/create', 'store')->middleware(['author']);
+                Route::put('/{resourceId}', 'update')->middleware(['author']);
+                Route::delete('/{resourceId}', 'destroy')->middleware(['author']);
+            });
+        });
 
-Route::get('/openai', [ChatGPTController::class, 'index'])->middleware('auth');
-Route::post('/openai', [ChatGPTController::class, 'prompt'])->middleware('auth');
+        Route::prefix('/homework')->group(function(){
+            // Routes for managing homework
+            Route::controller(HomeworkController::class)->group(function(){
+                Route::get('/', 'index')->middleware(['member']);
+                Route::get('/create', 'create')->middleware(['author']);
+                Route::post('/', 'store')->middleware(['author']);
+                Route::get('/{homeworkId}', 'show')->middleware(['author']);
+                Route::get('/{homeworkId}/edit', 'edit')->middleware(['author']);
+                Route::put('/{homeworkId}', 'update')->middleware(['author']);
+                Route::delete('/{homeworkId}', 'destroy')->middleware(['author']);
+            });
+
+            // Routes for managing task
+            Route::controller(TaskController::class)->group(function(){
+                Route::get('/{homeworkId}/task', 'show')->middleware(['member']);
+                Route::post('/{homeworkId}/task/create', 'create')->middleware(['member']);
+                Route::post('/{homeworkId}/task/{taskId}/comment', 'comment')->middleware(['author']);
+                Route::delete('/{homeworkId}/task/{taskId}', 'destroy')->middleware(['member']);
+                Route::get('/{homeworkId}/download', 'downloadAll')->middleware(['author']);
+            });
+        });
+    });
+
+    // routes for openai api
+    Route::controller(ChatGPTController::class)->group(function(){
+        Route::get('/openai', 'index');
+        Route::post('/openai', 'prompt');
+    });
+
+    // routes for managing chats with users
+    Route::controller(ChatController::class)->group(function(){
+        Route::get('/chats', 'index');
+        Route::post('/chats/{id}', 'store');
+    });
+});
+

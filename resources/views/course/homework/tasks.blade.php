@@ -10,6 +10,7 @@
             <p>{{$homework->description}}</p>
             <p>Deadline: {{$homework->finish_date}}</p>
             <p>Remaining time: {{$finishTime > 0 ? $finishTime : "Task closed"}}</p>
+            <div class="badge badge-warning">{{ $homework->available ? 'available' : 'unavailable' }}</div>
         </div>
         <div>
             <a href="/course/{{$course->id}}/homework/{{$homework->id}}/edit">

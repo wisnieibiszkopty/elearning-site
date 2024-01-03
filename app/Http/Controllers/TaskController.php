@@ -6,19 +6,35 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Course;
 use App\Models\Homework;
-use Carbon\Carbon;
 
 /*
  * Z czasem jest w chuj problemow
+ * Chce zrobic getRemainingTime jako Facade
+ * ale nie wiem jeszcze jak
+ *
  */
 
 class TaskController extends Controller
 {
-    private function getRemainingTime($finishDate): string{
-        $currentTime = Carbon::now()->timestamp;
-        $finishTime = Carbon::parse($finishDate)->timestamp;
-        $remainingTime = $finishTime - $currentTime;
-        return Carbon::createFromTimestamp($remainingTime)->format('H:i:s');
+    private function getRemainingTime($finishDate): array{
+        $date = \DateTime::createFromFormat('Y-m-d H:i:s', $finishDate);
+        $now = new \DateTime();
+
+        if($date > $now){
+            // you can still upload task on time
+            $remainingTime = $now->diff($date);
+            $onTime = true;
+        } else {
+            // you're too late
+            $remainingTime = $date->diff($now);
+            $onTime = false;
+        }
+
+        return [$remainingTime->format('%Y-%m-%d %H:%I:%S'), $onTime];
+//        $currentTime = Carbon::now()->timestamp;
+//        $finishTime = Carbon::parse($finishDate)->timestamp;
+//        $remainingTime = $finishTime - $currentTime;
+//        return Carbon::createFromTimestamp($remainingTime)->format('H:i:s');
     }
 
     public function create(Request $request, $id, $homeworkId){
@@ -64,24 +80,15 @@ class TaskController extends Controller
         $userId = auth()->id();
         $remainingTime = self::getRemainingTime($homework->finish_date);
 
+        //dd([$homework->finish_date, $remainingTime]);
+
         if($homework && $course){
-            if($homework->available && $userId != $course->author_id){
+            if($homework->available){
                 $task = Task::where('homework_id', $homeworkId)->where('author_id', $userId)->first();
                 return view('/course/homework/show', [
                     'course' => $course,
                     'homework' => $homework,
                     'task' => $task,
-                    'finishTime' => $remainingTime
-                ]);
-            } else {
-                $tasks = Task::where('homework_id', $homeworkId)
-                    ->join('users', 'users.id', '=', 'tasks.author_id')
-                    ->select('tasks.*', 'users.avatarPath', 'users.name', 'users.id as userId')
-                    ->get();
-                return view('/course/homework/tasks', [
-                    'course' => $course,
-                    'homework' => $homework,
-                    'tasks' => $tasks,
                     'finishTime' => $remainingTime
                 ]);
             }

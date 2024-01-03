@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\Homework;
+use App\Models\Task;
 
 /*
  *
@@ -30,10 +31,7 @@ class HomeworkController extends Controller
             'name' => ['required', 'min:3'],
             'description' => [],
             'finishDate' => ['required'],
-            'available' => ['required']
         ]);
-
-
 
         $homework = new Homework();
 
@@ -59,6 +57,26 @@ class HomeworkController extends Controller
         $homework->save();
 
         return redirect('/course/' . $id . '/homework');
+    }
+
+    public function show(int $id, int $homeworkId){
+        $course = Course::find($id);
+        $homework = Homework::find($homeworkId);
+
+        dd($homework->finish_date);
+
+        $remainingTime = self::getRemainingTime($homework->finish_date);
+
+        $tasks = Task::where('homework_id', $homeworkId)
+            ->join('users', 'users.id', '=', 'tasks.author_id')
+            ->select('tasks.*', 'users.avatarPath', 'users.name', 'users.id as userId')
+            ->get();
+        return view('/course/homework/tasks', [
+            'course' => $course,
+            'homework' => $homework,
+            'tasks' => $tasks,
+            'finishTime' => $remainingTime
+        ]);
     }
 
     public function edit(int $id, int $homeworkId){
