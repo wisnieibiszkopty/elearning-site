@@ -52,7 +52,7 @@ class CourseController extends Controller
         if($course->save()){
             // author of the course also has to be member of it to pass authentication
             $course->members()->attach(auth()->id());
-            return redirect('course/' . $course->id);
+            return redirect('course/' . $course->id . '/posts');
         }
     }
 
@@ -67,7 +67,7 @@ class CourseController extends Controller
                 $course->members()->attach($userId);
             }
 
-            return redirect('course/' . $course->id);
+            return redirect('course/' . $course->id . '/posts');
         }
 
         return back();

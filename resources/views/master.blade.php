@@ -6,6 +6,7 @@
     <title>@yield('title', 'Welcome to course.io')</title>
     <script src="https://kit.fontawesome.com/2778872a47.js" crossorigin="anonymous"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @yield('head')
 </head>
 <body>
     <div class="bg-base-200">

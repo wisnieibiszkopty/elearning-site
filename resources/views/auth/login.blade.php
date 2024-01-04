@@ -12,17 +12,17 @@
             @endif
             <form method="POST" action="/auth/login">
                 @csrf
-                <input type="text" name="email" id="email" placeholder="E-mail"
+                <input type="email" name="email" required id="email" placeholder="E-mail"
                        class="input input-bordered w-full my-3">
                 <label for="password"></label>
-                <input type="password" name="password" id="password" placeholder="Password"
+                <input type="password" required name="password" id="password" placeholder="Password"
                        class="input input-bordered w-full my-3">
                 <p>New here? <a href="/register" class="link link-primary">Click here to create account</a></p>
                 <div class="card-actions justify-end">
                     <button class="btn btn-secondary my-3 px-10">Sign in</button>
                 </div>
             </form>
-            <a href="/auth/redirect" class="btn btn-primary"> Login with Google </a>
+            <a href="/auth/google/redirect" class="btn btn-primary"> Login with Google </a>
         </div>
     </div>
 </div>

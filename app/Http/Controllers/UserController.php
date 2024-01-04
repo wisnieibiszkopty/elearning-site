@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     public function register(): View{
-        return view("registration");
+        return view("auth/registration");
     }
 
     public function login(): View{
-        return view("login");
+        return view("auth/login");
     }
 
     public function store(Request $request){
@@ -88,7 +88,7 @@ class UserController extends Controller
         if($request->hasFile('avatar') && $user){
             // deleting old avatar if exists
             // it don't work actually
-            $path = $user->avatarPath;  
+            $path = $user->avatarPath;
             //dd(public_path($path));
             // if(file_exists(public_path($path))){
             //     unlink(public_path($path));
@@ -135,7 +135,7 @@ class UserController extends Controller
         $user->email = $updateForm['email'];
         $user->company = $updateForm['company'];
         $user->save();
-        
+
         return back();
     }
 

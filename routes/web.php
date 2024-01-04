@@ -27,10 +27,8 @@ use Illuminate\Support\Facades\Route;
 |   3. Poprawić style
 |   4. Poprawić query do posts
 |   5. Dodać chat
-|   6. Dodać integracje z chatemgpt
 |   8. dziwny problem posty w obrębie jednego paginate są odwrócone ale ogółem to już nie
-|   9. autoryzacja z google
-|
+|   9. Napraw ten jebany layout
 */
 
 Route::get('/', function () {
@@ -44,8 +42,8 @@ Route::middleware('guest')->group(function(){
     // routes for doing authorization
     Route::post('/auth/login', [UserController::class, 'auth']);
     Route::post('/auth/register', [UserController::class, 'store']);
-    Route::get('/auth/redirect', [GoogleAuthController::class, 'redirect']);
-    Route::get('/auth/callback', [GoogleAuthController::class, 'callback']);
+    Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect']);
+    Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback']);
 });
 
 // routes only for authenticated users
@@ -135,16 +133,16 @@ Route::middleware('auth')->group(function(){
         });
     });
 
-    // routes for openai api
-    Route::controller(ChatGPTController::class)->group(function(){
-        Route::get('/openai', 'index');
-        Route::post('/openai', 'prompt');
-    });
-
     // routes for managing chats with users
     Route::controller(ChatController::class)->group(function(){
+        // zwraca liste chatow dla danego uzytkownika
         Route::get('/chats', 'index');
-        Route::post('/chats/{id}', 'store');
+        // tworzy nowy chat jesli nie istnieje
+        Route::post('/chats/{userId}/create', 'create');
+        // zwraca widok z lista wiadomosci i przcyskiem do wysylania
+        Route::get('/chats/{chatId}', 'show');
+        // rozsyla wiadomosc i zapisuje ja w bazie danych
+        Route::post('/chats/{chatId}', 'store');
     });
 });
 

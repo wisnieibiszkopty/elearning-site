@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
 
+// don't know how to specifie role and company yet
 class GoogleAuthController extends Controller
 {
     public function redirect(){
@@ -13,6 +16,20 @@ class GoogleAuthController extends Controller
     }
 
     public function callback(){
-        $user = Socialite::driver('google')->user();
+        $googleUser = Socialite::driver('google')->user();
+        $user = User::where('google_id', $googleUser->getId())->first();
+
+        if(!$user) {
+            $user = User::create([
+                'name' => $googleUser->getName(),
+                'email' => $googleUser->getEmail(),
+                'google_id' => $googleUser->getId(),
+                'company' => '',
+                'role' => 0
+            ]);
+        }
+
+        Auth::login($user);
+        return redirect('/course');
     }
 }

@@ -50,7 +50,10 @@
                 <button class="btn btn-secondary px-8">Logout</button>
             </form>
             @else
-                <button class="btn btn-primary px-8">Message</button>
+                <form method="POST" action="/chats/{{$user->id}}/create">
+                    @csrf
+                    <button class="btn btn-primary px-8">Message</button>
+                </form>
             @endif
         </div>
     </div>
