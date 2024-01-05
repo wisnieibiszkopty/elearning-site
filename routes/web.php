@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ChatGPTController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\HomeworkController;
@@ -135,14 +134,13 @@ Route::middleware('auth')->group(function(){
 
     // routes for managing chats with users
     Route::controller(ChatController::class)->group(function(){
-        // zwraca liste chatow dla danego uzytkownika
         Route::get('/chats', 'index');
-        // tworzy nowy chat jesli nie istnieje
         Route::post('/chats/{userId}/create', 'create');
-        // zwraca widok z lista wiadomosci i przcyskiem do wysylania
         Route::get('/chats/{chatId}', 'show');
-        // rozsyla wiadomosc i zapisuje ja w bazie danych
+        Route::get('/chats/{chatId}/load', 'load');
         Route::post('/chats/{chatId}', 'store');
+        Route::put('/chats/message/{message}', 'edit');
+        Route::delete('/chats/message/{message}', 'destroy');
     });
 });
 

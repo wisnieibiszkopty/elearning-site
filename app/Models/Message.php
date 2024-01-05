@@ -13,7 +13,6 @@ class Message extends Model
         'chat_id',
         'chat_member_id',
         'message',
-        'readed'
     ];
 
     public function chat(){

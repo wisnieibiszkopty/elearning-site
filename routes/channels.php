@@ -19,5 +19,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 Broadcast::channel('chat.{roomId}', function($user, $roomId){
     // check if user belongs to room
-    return true;
+    $chat = \App\Models\Chat::find($roomId);
+    $exists = $chat->users()->where('user_id', $user->id)->exists();
+    return $exists;
 });
