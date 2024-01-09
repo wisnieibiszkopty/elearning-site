@@ -21,13 +21,14 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 |   Plan działania:
-|   1. Zrób coś z obliczaniem czasu żeby było w oddzielnym pliku
 |   2. Naprawić usuwanie plików ze storage
 |   3. Poprawić style
 |   4. Poprawić query do posts
 |   5. Dodać chat
 |   8. dziwny problem posty w obrębie jednego paginate są odwrócone ale ogółem to już nie
-|   9. Napraw ten jebany layout
+|   9. Napraw divy na stronie głównej i animacje
+|   10. Sprawdź czy wszystkie formularz dobrze działają (nie)
+|   11. Dodaj seeder
 */
 
 Route::get('/', function () {
@@ -83,6 +84,7 @@ Route::middleware('auth')->group(function(){
         Route::middleware('member')->group(function(){
             // Routes for managing posts
             Route::controller(PostController::class)->group(function(){
+                Route::get('/', 'show')->middleware(['member']);
                 Route::prefix('posts')->group(function(){
                     Route::get('/', 'show');
                     Route::post('/create', 'store');

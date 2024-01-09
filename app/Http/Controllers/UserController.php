@@ -57,7 +57,7 @@ class UserController extends Controller
             return redirect('/course');
         }
 
-        return redirect('/login');
+        return redirect('/login')->withErrors(['form' => 'Invalid login data!']);
     }
 
     public function logout(Request $request){
@@ -125,9 +125,9 @@ class UserController extends Controller
 
     public function update(Request $request){
         $updateForm = $request->validate([
-            'name' => ['required'],
-            'email' => ['required', 'email'],
-            'company' => ['required']
+            'name' => ['required', 'min:3'],
+            'email' => ['required', 'email', 'min:3'],
+            'company' => ['required', 'min:3']
         ]);
 
         $user = User::find(auth()->id());
@@ -140,7 +140,6 @@ class UserController extends Controller
     }
 
     public function destroy($id){
-
         if($id == auth()->id()){
             User::destroy($id);
             return redirect('/');

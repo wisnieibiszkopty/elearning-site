@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\Homework;
 use App\Models\Task;
+use App\Core\Helper;
 
 /*
  *
@@ -18,23 +19,6 @@ use App\Models\Task;
 
 class HomeworkController extends Controller
 {
-    private function getRemainingTime($finishDate): array{
-        $date = \DateTime::createFromFormat('Y-m-d H:i:s', $finishDate);
-        $now = new \DateTime();
-
-        if($date > $now){
-            // you can still upload task on time
-            $remainingTime = $now->diff($date);
-            $onTime = true;
-        } else {
-            // you're too late
-            $remainingTime = $date->diff($now);
-            $onTime = false;
-        }
-
-        return [$remainingTime->format('%d-%m-%Y %H:%I:%S'), $onTime];
-    }
-
     public function index(int $id){
         $course = Course::find($id);
         return view('course/homework/index', ['course' => $course]);
@@ -82,7 +66,7 @@ class HomeworkController extends Controller
         $course = Course::find($id);
         $homework = Homework::find($homeworkId);
 
-        $time = self::getRemainingTime($homework->finish_date);
+        $time = Helper::getRemainingTime($homework->finish_date);
         $remainingTime = $time[0];
         $onTime = $time[1];
 

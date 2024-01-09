@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Helper\Helper;
+use App\Core\Helper;
 
 class HelperProvider extends ServiceProvider
 {
@@ -12,7 +12,7 @@ class HelperProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind('helper', function (){
+        $this->app->singleton('helper', function (){
            return new Helper();
         });
     }

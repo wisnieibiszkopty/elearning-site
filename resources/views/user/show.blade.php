@@ -4,7 +4,7 @@
 
 @section('main')
 <div class="m-2">
-    <div class="flex flex-col md:flex-row">
+    <div class="flex flex-col">
         <div class="flex flex-col items-center">
             @if($user->id == auth()->id())
             <div class="avatar">
@@ -25,7 +25,7 @@
                         @method('patch')
                         @csrf
                         <div class="flex space-x-4 w-full">
-                            <input type="file" name="avatar" class="file-input file-input-bordered w-full max-w-xs" />
+                            <input type="file" name="avatar" required class="file-input file-input-bordered w-full max-w-xs" />
                             <button class="btn btn-secondary w-1/4">Change</button>
                         </div>
                     </form>
@@ -40,8 +40,8 @@
             @endif
             <h1 class="text-3xl mt-5">{{ $user->name }}</h1>
         </div>
-        <div class="flex justify-around spacex-x-5 mt-10 md:justify-end md:w-full mx-10">
-            @if(Auth::id() == $user->id)
+        <div class="flex justify-around md:justify-center md:space-x-10 spacex-x-5 mt-10 mx-10">
+            @if(auth()->id() == $user->id)
             <a href="/user/{{ $user->id }}/edit">
                 <button class="btn btn-primary px-8">Manage</button>
             </a>
@@ -58,7 +58,6 @@
         </div>
     </div>
     <div class="flex justify-center mt-10">
-        <!-- chuj wie jak jest prosto ustawic (kolka) -->
         <ul>
         <li class="text-2xl my-2 flex">
                 <div class="mr-5 px-5 flex items-center bg-base-200 rounded-full p-2 shadow-3xl">

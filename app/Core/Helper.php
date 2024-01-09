@@ -1,9 +1,14 @@
 <?php
 
-namespace App\Helper;
+namespace App\Core;
 
 class Helper{
-    public function getRemainingTime($finishDate): array{
+
+    public function __construct(){
+
+    }
+
+    public static function getRemainingTime($finishDate): array{
         $date = \DateTime::createFromFormat('Y-m-d H:i:s', $finishDate);
         $now = new \DateTime();
 
@@ -18,11 +23,6 @@ class Helper{
         }
 
         return [$remainingTime->format('%Y-%m-%d %H:%I:%S'), $onTime];
-
-//        $currentTime = Carbon::now()->timestamp;
-//        $finishTime = Carbon::parse($finishDate)->timestamp;
-//        $remainingTime = $finishTime - $currentTime;
-//        return Carbon::createFromTimestamp($remainingTime)->format('H:i:s');
     }
 
 }

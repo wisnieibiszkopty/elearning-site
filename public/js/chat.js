@@ -33,6 +33,8 @@ let userId = document.getElementById('data').getAttribute('user-id')
 let messages = document.getElementById('messages');
 
 Echo.private(`chat.${id}`).listen('.chat.message', (data) => {
+
+
     let newMessage = document.createElement('div');
     let messageContent = document.createElement('div');
     messageContent.innerText = data.message;
@@ -41,9 +43,7 @@ Echo.private(`chat.${id}`).listen('.chat.message', (data) => {
     newMessage.classList.add('flex');
     let isSender = (userId == data.senderId);
     let chatClass = 'chat-start';
-    console.log(isSender);
     if(isSender){
-        console.log('ajzda');
         newMessage.classList.add('justify-end');
         messageContent.classList.add('chat-bubble-secondary');
         chatClass = 'chat-end';
@@ -68,6 +68,7 @@ document.getElementById('load-more').addEventListener('click', function (){
             return response.text();
         })
         .then(data => {
+
             //document.getElementById('load-more-wrapper').remove();
             document.getElementById('messages').insertAdjacentHTML('afterbegin', data);
             page++;

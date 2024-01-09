@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Helper;
+namespace App\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class HelperFacade extends Facade{
+class Helper extends Facade{
 
     protected static function getFacadeAccessor(): string
     {

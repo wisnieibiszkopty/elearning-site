@@ -16,8 +16,14 @@
             <h3 class="text-xl">Share new file with members of the course</h3>
             <form method="POST" action="/course/{{$course->id}}/resources/create" enctype="multipart/form-data">
                 @csrf
-                <input type="file" name="file" class="file-input file-input-bordered w-full max-w-xs my-2">
-                <input type="text" name="name" placeholder="Filename" class="input input-bordered w-full max-w-xs my-2">
+                @error('file')
+                    <x-error :message="$message"></x-error>
+                @enderror
+                <input type="file" name="file" required class="file-input file-input-bordered w-full max-w-xs my-2" autocomplete="off">
+                @error('name')
+                    <x-error :message="$message"></x-error>
+                @enderror
+                <input type="text" name="name" placeholder="Filename" required min="3" class="input input-bordered w-full max-w-xs my-2">
                 <br><button class="btn btn-primary my-2">Add file</button>
             </form>
         </div>
@@ -39,10 +45,25 @@
             </thead>
             <tbody>
             @foreach($course->resources->reverse() as $resource)
+                <!-- better option is to store it in db -->
+                @php
+                    function formatSizeUnits($bytes) {
+                       $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+                        $bytes = max($bytes, 0);
+                        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+                        $pow = min($pow, count($units) - 1);
+                        $bytes /= (1 << (10 * $pow));
+                        return round($bytes, 2) . ' ' . $units[$pow];
+                    }
+
+                    $file = public_path('storage/' . $resource->file_path);
+                    $filesize = filesize($file);
+                    $formattedSize = formatSizeUnits($filesize);
+                @endphp
                 <tr class="hover">
                     <td></td>
-                    <td><a href="{{ asset('storage/' . $resource->file_path) }}" download="{{$resource->name}}">{{$resource->name}}</a></td>
-                    <td></td>
+                    <td><a href="{{ $file }}" download="{{$resource->name}}">{{$resource->name}}</a></td>
+                    <td>{{ $formattedSize }}</td>
                     <td><p>{{$resource->created_at}}</p></td>
                     @if(auth()->id() == $course->author_id)
                     <td>
@@ -64,7 +85,7 @@
                                             <form method="POST" action="/course/{{$course->id}}/resources/{{$resource->id}}">
                                                 @method('put')
                                                 @csrf
-                                                <input type="text" name="name" placeholder="New filename" autocomplete="off" 
+                                                <input type="text" name="name" required min="3" placeholder="New filename" autocomplete="off"
                                                 class="input input-bordered w-full max-w-xs mt-2">
                                                 <button class="btn btn-primary mt-2">Rename</button>
                                             </form>
@@ -88,6 +109,6 @@
         </table>
     </div>
     @else
-        <h1>No files were added yet!</h1>
+        <x-empty></x-empty>
     @endif
 @endsection

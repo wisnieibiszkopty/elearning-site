@@ -85,6 +85,7 @@ class ChatController extends Controller
         }
 
         // broadcasting message
+        // generate edit and delete button
         MessageEvent::dispatch($chatId, $senderId, $message);
 
         // returning status

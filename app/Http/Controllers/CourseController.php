@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Database\UniqueConstraintViolationException;
+
 /*
  *
  *  Dodaj bledy w widoku dodawania kursu i edycji
@@ -49,11 +51,18 @@ class CourseController extends Controller
             'author_id' => auth()->id()
         ]);
 
-        if($course->save()){
-            // author of the course also has to be member of it to pass authentication
-            $course->members()->attach(auth()->id());
-            return redirect('course/' . $course->id . '/posts');
+        try {
+            if ($course->save()) {
+                // author of the course also has to be member of it to pass authentication
+                $course->members()->attach(auth()->id());
+            }
+        } catch(UniqueConstraintViolationException $e){
+            return redirect('course/create')
+                ->withErrors(['code' => 'Code must be unique!'])
+                ->withInput();
         }
+
+        return redirect('course/' . $course->id . '/posts');
     }
 
     // method for adding user to course, based on members table
@@ -95,14 +104,18 @@ class CourseController extends Controller
             'description' => ['required', 'min:3']
         ]);
 
-        $course = Course::find($id);
-        if($course){
-            $course->title = $form['title'];
-            $course->code = $form['code'];
-            $course->description = $form['description'];
-            $course->save();
+        try {
+            $course = Course::find($id);
+            if ($course) {
+                $course->title = $form['title'];
+                $course->code = $form['code'];
+                $course->description = $form['description'];
+                $course->save();
+            }
+            return back();
+        } catch(UniqueConstraintViolationException $e){
+            return back()->withErrors(['code' => 'Code must be unique!'])->withInput();
         }
-        return back();
     }
 
     public function leave(int $id){

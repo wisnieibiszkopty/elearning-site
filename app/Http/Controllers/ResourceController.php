@@ -53,7 +53,7 @@ class ResourceController extends Controller
 
     public function destroy(int $id, int $resourceId){
         $resource = Resource::find($resourceId);
-        $filePath = "storage/" . $resource->file_path;
+        $filePath = public_path($resource->file_path);
 
         // method behaves like file doesn't exist
         if(Storage::exists($filePath)){

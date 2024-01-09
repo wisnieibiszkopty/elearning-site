@@ -6,40 +6,17 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Course;
 use App\Models\Homework;
-
-/*
- * Z czasem jest w chuj problemow
- * Chce zrobic getRemainingTime jako Facade
- * ale nie wiem jeszcze jak
- *
- */
+use App\Core\Helper;
 
 class TaskController extends Controller
 {
-    private function getRemainingTime($finishDate): array{
-        $date = \DateTime::createFromFormat('Y-m-d H:i:s', $finishDate);
-        $now = new \DateTime();
-
-        if($date > $now){
-            // you can still upload task on time
-            $remainingTime = $now->diff($date);
-            $onTime = true;
-        } else {
-            // you're too late
-            $remainingTime = $date->diff($now);
-            $onTime = false;
-        }
-
-        return [$remainingTime->format('%Y-%m-%d %H:%I:%S'), $onTime];
-    }
-
     public function create(Request $request, $id, $homeworkId){
         if($request->hasFile('task-file')){
             $user = auth()->id();
             $homework = Homework::find($homeworkId);
 
-            // computing reamining time
-            $time = self::getRemainingTime($homework->finish_date);
+            // computing remaining time
+            $time = Helper::getRemainingTime($homework->finish_date);
             $onTime = $time[1];
 
             // we have to store file in both cases -
@@ -78,7 +55,7 @@ class TaskController extends Controller
         $course = Course::find($id);
         $homework = Homework::find($homeworkId);
         $userId = auth()->id();
-        $remainingTime = self::getRemainingTime($homework->finish_date);
+        $remainingTime = Helper::getRemainingTime($homework->finish_date);
 
         if($homework && $course){
             if($homework->available){
