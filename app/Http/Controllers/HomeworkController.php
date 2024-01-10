@@ -10,9 +10,6 @@ use App\Core\Helper;
 
 /*
  *
- *  ale mam dospermiony pomysł
- *  zrobie countdown w czasie rzeczywistym jak sie wchodzi i sprawdza czas
- *  jakie sended debilu
  *  if user didn't sent task on time, and finish date will be changed
  *  so that user now sent task before that date, status won't change (fix in future)
  */

@@ -3,9 +3,10 @@
 @section('title', 'Home')
 
 @section('content')
+    <!--
 <div id="blob">
-
 </div>
+-->
 <div class="hero min-h-screen">
     <div class="hero-content text-center">
         <div class="max-w-md">
@@ -17,21 +18,21 @@
     </div>
 </div>
 <div class="flex flex-col lg:flex-row items-center justify-around my-20">
-    <div class="card w-96 bg-base-100 shadow-xl my-5">
+    <div class="card w-96 bg-base-100 shadow-xl my-5" style="height: 600px;">
         <div class="card-body">
             <h2 class="card-title">Join courses as student</h2>
             <p>Immerse yourself in the world of learning by joining courses on our platform. Browse materials, learn at your own pace, and track your progress. Grow alongside fellow students through interactive tools and diverse educational resources.</p>
             <img src="{{asset('images/svgs/svg4.svg')}}" class="mt-20">
         </div>
     </div>
-    <div class="card w-96 bg-base-100 shadow-xl my-5">
+    <div class="card w-96 bg-base-100 shadow-xl my-5" style="height: 600px;">
         <div class="card-body">
             <h2 class="card-title">Create courses for your students</h2>
             <p>Create compelling courses and share knowledge with students on our platform. Engage learners with interactive content, track their performance, and foster a collaborative learning environment. Inspire the next generation with your expertise.</p>
             <img src="{{asset('images/svgs/svg2.svg')}}" class="mt-20">
         </div>
     </div>
-    <div class="card w-96 bg-base-100 shadow-xl my-5 ">
+    <div class="card w-96 bg-base-100 shadow-xl my-5" style="height: 600px;">
         <div class="card-body">
             <h2 class="card-title">Talk to your friend</h2>
             <p>Connect with fellow users through our chat feature, facilitating real-time communication. Engage in discussions, seek assistance, or collaborate on projects. Enhance your learning experience by interacting with a vibrant community of students and teachers.</p>

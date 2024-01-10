@@ -24,11 +24,15 @@ use Illuminate\Support\Facades\Route;
 |   2. Naprawić usuwanie plików ze storage
 |   3. Poprawić style
 |   4. Poprawić query do posts
-|   5. Dodać chat
-|   8. dziwny problem posty w obrębie jednego paginate są odwrócone ale ogółem to już nie
-|   9. Napraw divy na stronie głównej i animacje
+|   5. Dodać chat (zostało usuwać przycisk do nowych wiadomości i wyświetlać przycisk do etydowania po
+|       utworzeniu nowej wiadomosci)
+|   9. Napraw animacje na stronie głównej
 |   10. Sprawdź czy wszystkie formularz dobrze działają (nie)
 |   11. Dodaj seeder
+|   12. napraw theme controller
+|   13. dodaj reszte na strone główną kursu
+|   14. Zrób coś z formularz do updatowania danych usera
+|
 */
 
 Route::get('/', function () {
@@ -65,8 +69,8 @@ Route::middleware('auth')->group(function(){
         Route::controller(CourseController::class)->group(function(){
             Route::post('/join', 'join');
             Route::get('/', 'index');
-            Route::get('/create','create')->middleware(['teacher']);
-            Route::post('/', 'store')->middleware(['teacher']);
+            Route::get('/create','create')->middleware('teacher');
+            Route::post('/', 'store')->middleware('teacher');
         });
     });
 
@@ -74,17 +78,17 @@ Route::middleware('auth')->group(function(){
 
         // routes for managing specific course
         Route::controller(CourseController::class)->group(function(){
-            Route::get('/edit', 'edit')->middleware(['author']);
-            Route::patch('/image', 'image')->middleware(['author']);
-            Route::put('/', 'update')->middleware(['author']);
-            Route::delete('/leave', 'leave')->middleware(['member']);
-            Route::delete('/', 'destroy')->middleware(['author']);
+            Route::get('/edit', 'edit')->middleware('author');
+            Route::patch('/image', 'image')->middleware('author');
+            Route::put('/', 'update')->middleware('author');
+            Route::delete('/leave', 'leave')->middleware('member');
+            Route::delete('/', 'destroy')->middleware('author');
         });
 
         Route::middleware('member')->group(function(){
             // Routes for managing posts
             Route::controller(PostController::class)->group(function(){
-                Route::get('/', 'show')->middleware(['member']);
+                Route::get('/', 'show')->middleware('member');
                 Route::prefix('posts')->group(function(){
                     Route::get('/', 'show');
                     Route::post('/create', 'store');
@@ -104,32 +108,32 @@ Route::middleware('auth')->group(function(){
         // Routes for managing resources in course
         Route::controller(ResourceController::class)->group(function(){
             Route::prefix('/resources')->group(function(){
-                Route::get('/', 'index')->middleware(['member']);
-                Route::post('/create', 'store')->middleware(['author']);
-                Route::put('/{resourceId}', 'update')->middleware(['author']);
-                Route::delete('/{resourceId}', 'destroy')->middleware(['author']);
+                Route::get('/', 'index')->middleware('member');
+                Route::post('/create', 'store')->middleware('author');
+                Route::put('/{resourceId}', 'update')->middleware('author');
+                Route::delete('/{resourceId}', 'destroy')->middleware('author');
             });
         });
 
         Route::prefix('/homework')->group(function(){
             // Routes for managing homework
             Route::controller(HomeworkController::class)->group(function(){
-                Route::get('/', 'index')->middleware(['member']);
-                Route::get('/create', 'create')->middleware(['author']);
-                Route::post('/', 'store')->middleware(['author']);
-                Route::get('/{homeworkId}', 'show')->middleware(['author']);
-                Route::get('/{homeworkId}/edit', 'edit')->middleware(['author']);
-                Route::put('/{homeworkId}', 'update')->middleware(['author']);
-                Route::delete('/{homeworkId}', 'destroy')->middleware(['author']);
+                Route::get('/', 'index')->middleware('member');
+                Route::get('/create', 'create')->middleware('author');
+                Route::post('/', 'store')->middleware('author');
+                Route::get('/{homeworkId}', 'show')->middleware('author');
+                Route::get('/{homeworkId}/edit', 'edit')->middleware('author');
+                Route::put('/{homeworkId}', 'update')->middleware('author');
+                Route::delete('/{homeworkId}', 'destroy')->middleware('author');
             });
 
             // Routes for managing task
             Route::controller(TaskController::class)->group(function(){
-                Route::get('/{homeworkId}/task', 'show')->middleware(['member']);
-                Route::post('/{homeworkId}/task/create', 'create')->middleware(['member']);
-                Route::post('/{homeworkId}/task/{taskId}/comment', 'comment')->middleware(['author']);
-                Route::delete('/{homeworkId}/task/{taskId}', 'destroy')->middleware(['member']);
-                Route::get('/{homeworkId}/download', 'downloadAll')->middleware(['author']);
+                Route::get('/{homeworkId}/task', 'show')->middleware('member');
+                Route::post('/{homeworkId}/task/create', 'create')->middleware('member');
+                Route::post('/{homeworkId}/task/{taskId}/comment', 'comment')->middleware('author');
+                Route::delete('/{homeworkId}/task/{taskId}', 'destroy')->middleware('member');
+                Route::get('/{homeworkId}/download', 'downloadAll')->middleware('author');
             });
         });
     });
@@ -144,5 +148,9 @@ Route::middleware('auth')->group(function(){
         Route::put('/chats/message/{message}', 'edit');
         Route::delete('/chats/message/{message}', 'destroy');
     });
+});
+
+Route::fallback(function(){
+   return view('errors.404');
 });
 

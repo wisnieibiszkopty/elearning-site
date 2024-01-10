@@ -45,25 +45,13 @@
             </thead>
             <tbody>
             @foreach($course->resources->reverse() as $resource)
-                <!-- better option is to store it in db -->
                 @php
-                    function formatSizeUnits($bytes) {
-                       $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-                        $bytes = max($bytes, 0);
-                        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-                        $pow = min($pow, count($units) - 1);
-                        $bytes /= (1 << (10 * $pow));
-                        return round($bytes, 2) . ' ' . $units[$pow];
-                    }
-
                     $file = public_path('storage/' . $resource->file_path);
-                    $filesize = filesize($file);
-                    $formattedSize = formatSizeUnits($filesize);
                 @endphp
                 <tr class="hover">
                     <td></td>
                     <td><a href="{{ $file }}" download="{{$resource->name}}">{{$resource->name}}</a></td>
-                    <td>{{ $formattedSize }}</td>
+                    <td>{{ $resource->file_size }}</td>
                     <td><p>{{$resource->created_at}}</p></td>
                     @if(auth()->id() == $course->author_id)
                     <td>

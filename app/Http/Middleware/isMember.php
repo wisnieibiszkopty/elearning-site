@@ -18,9 +18,14 @@ class isMember
     {
         $id = $request->route('id');
         $course = Course::find($id);
-        if($course->members->contains('id', auth()->id())){
-            return $next($request);
+        if($course){
+            if($course->members->contains('id', auth()->id())){
+                return $next($request);
+            }
+
+            abort(403);
         }
-        abort(403);
+
+        abort(404);
     }
 }

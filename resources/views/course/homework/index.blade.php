@@ -9,7 +9,7 @@
         <a href="/course/{{$course->id}}/homework/create"><button class="btn btn-secondary">Add homework</button></a>
     </div>
     @endif
-    @foreach($course->homework->reverse() as $homework)
+    @forelse($course->homework->reverse() as $homework)
         @if($homework->available || auth()->id() == $course->author_id)
         <div class="card bg-base-200 m-4 shadow-lg">
             <div class="p-4">
@@ -25,5 +25,7 @@
             </div>
         </div>
         @endif
-    @endforeach
+    @empty
+        <x-empty></x-empty>
+    @endforelse
 @endsection

@@ -12,7 +12,7 @@ class PostController extends Controller
     public function show(int $id){
         $course = Course::with(['posts.comments'])->find($id);
         // napraw
-        $posts = $course->posts()->paginate(10);
+        $posts = $course->posts()->latest()->paginate(6);
 
         return view('course/posts', ['course' => $course,
             'posts' => $posts]);

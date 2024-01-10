@@ -9,7 +9,7 @@ class Resource extends Model
 {
     use HasFactory;
 
-    protected $fillable = [ 'course_id', 'name', 'file_path' ];
+    protected $fillable = [ 'course_id', 'name', 'file_path', 'file_size'];
 
     public function course(){
         return $this->belongsTo(Course::class);

@@ -12,7 +12,7 @@
             <p>Remaining time: {{$onTime ? $finishTime : "Task closed"}}</p>
             <div class="badge badge-warning">{{ $homework->available ? 'available' : 'unavailable' }}</div>
         </div>
-        <div class="flex flex-col space-y-2 items-end">
+        <div class="flex md:flex-col flex-row space-x-2 space-y-2 items-end">
             <a href="/course/{{$course->id}}/homework/{{$homework->id}}/edit">
                 <button class="btn btn-primary">Edit</button>
             </a>
@@ -26,7 +26,7 @@
             </a>
         </div>
     </div>
-    <div>
+    <div class="ml-10">
         <h2 class="text-xl mb-4">Tasks sent:</h2>
         @php
         $ratio = $tasks->count() / $course->members->count() * 100;

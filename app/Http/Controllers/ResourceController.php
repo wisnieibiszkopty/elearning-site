@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\Helper;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\Resource;
@@ -30,14 +31,18 @@ class ResourceController extends Controller
         if($request->hasFile('file')){
             $file = $request->file('file');
             $filePath = $file->store('resources', 'public');
-        }
 
-        $resource = new Resource([
-            'course_id' => $id,
-            'name' => $form['name'],
-            'file_path' => $filePath
-        ]);
-        $resource->save();
+            $filesize = filesize($file);
+            $formattedSize = Helper::formatSizeUnits($filesize);
+
+            $resource = new Resource([
+                'course_id' => $id,
+                'name' => $form['name'],
+                'file_path' => $filePath,
+                'file_size' => $formattedSize
+            ]);
+            $resource->save();
+        }
 
         return back();
     }

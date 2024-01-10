@@ -68,7 +68,7 @@ class CourseController extends Controller
     // method for adding user to course, based on members table
     public function join(Request $request){
         $entryCode = $request['code'];
-        $course = Course::where('code', $entryCode)->firstOrFail();
+        $course = Course::where('code', $entryCode)->first();
         if($course){
             $userId = auth()->id();
             // check if user isn't already in course

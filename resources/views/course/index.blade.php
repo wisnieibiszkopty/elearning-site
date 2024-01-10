@@ -35,7 +35,7 @@
         @forelse($courses as $course)
             <x-course-item :course="$course"></x-course-item>
         @empty
-            <h1>It seems that you don't join any courses yet</h1>
+            <x-empty></x-empty>
         @endforelse
     </div>
 @endsection
