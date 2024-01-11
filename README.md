@@ -8,6 +8,15 @@ or
 ```bash
 yarn dev
 ```
+```bash
+php artisan storage:link
+```
+to link public and storage directories
+```
+php artisan db:seed
+```
+to add example data to database
+
 and
 ```bash
 php artisan migrate
