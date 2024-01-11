@@ -29,7 +29,6 @@ use Illuminate\Support\Facades\Route;
 |   9. Napraw animacje na stronie głównej
 |   10. Sprawdź czy wszystkie formularz dobrze działają (nie)
 |   11. Dodaj seeder
-|   12. napraw theme controller
 |   13. dodaj reszte na strone główną kursu
 |   14. Zrób coś z formularz do updatowania danych usera
 |

@@ -30,11 +30,24 @@ import './bootstrap';
 //     blob.style.top = `${clientY}px`;
 // });
 
-let themeButtons = document.querySelectorAll('theme-controller');
-themeButtons.forEach(function(button) {
-    button.addEventListener('change', function() {
-        if (this.checked) {
-            console.log('Zaznaczono: ' + this.value);
-        }
-    });
+document.addEventListener('DOMContentLoaded', function () {
+   let themeControllers = document.querySelectorAll('.theme-controller');
+   themeControllers.forEach(function(radioButton){
+      radioButton.addEventListener('change', function(){
+          if(radioButton.checked){
+              let theme = radioButton.value;
+              localStorage.setItem('theme', theme);
+          }
+      });
+   });
+
+   let theme = localStorage.getItem('theme');
+   if(theme){
+       console.log(theme);
+       themeControllers.forEach(function(radioButton){
+           if(radioButton.value === theme){
+               radioButton.checked = true;
+           }
+       })
+   }
 });
