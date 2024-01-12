@@ -17,22 +17,33 @@ class CourseSeeder extends Seeder
     {
         Course::factory(5)->create();
 
-        $user1 = User::where('name', 'Johny Silverhand')->get();
+        $user1 = User::where('name', 'Johny Silverhand')->first();
 
-        Course::factory([
+        $course = Course::factory([
            'title' => 'Java Spring course',
            'author_id' => $user1->id,
            'code' => 'JAVA',
            'description' => 'Course for people wanting to start working as java backend developers'
-        ]);
+        ])->create();
 
-        $user2 = User::where('name', 'Judy Alvarez')->get();
+        // attaching example members to course
+        $user2 = User::where('name', 'Misty')->first();
+        $user3 = User::where('name', 'Jackie Welles')->first();
 
-        Course::factory([
+        $course->members()->attach($user1->id);
+        $course->members()->attach($user2->id);
+        $course->members()->attach($user3->id);
+
+        $user4 = User::where('name', 'Judy Alvarez')->first();
+
+        $course2 = Course::factory([
             'title' => 'Laravel course',
-            'author_id' => $user2->id,
+            'author_id' => $user4->id,
             'code' => 'LAR24',
             'description' => 'Course for classes about programming web applications'
-        ]);
+        ])->create();
+
+        $course2->members()->attach($user2->id);
+        $course2->members()->attach($user3->id);
     }
 }

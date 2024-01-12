@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Homework;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +18,15 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
+        $filePath = $this->faker->image(storage_path('app/public/tasks'), 400, 300, null, false);
+
         return [
-            //
+            'author_id' => User::factory(),
+            'homework_id' => Homework::factory(),
+            'file_path' => $filePath,
+            'filename' => fake()->firstName(),
+            'sended_on_time' => fake()->boolean(),
+            'comment' => ''
         ];
     }
 }

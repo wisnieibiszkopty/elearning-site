@@ -24,8 +24,7 @@ class DatabaseSeeder extends Seeder
             ResourceSeeder::class,
             HomeworkSeeder::class,
             TaskSeeder::class,
-            ChatSeeder::class,
-            MessageSeeder::class
+            ChatSeeder::class
         ]);
     }
 }

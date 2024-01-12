@@ -17,7 +17,7 @@ class ChatFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            // there is nothing to add here
         ];
     }
 }

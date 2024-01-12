@@ -28,7 +28,6 @@ use Illuminate\Support\Facades\Route;
 |       utworzeniu nowej wiadomosci)
 |   9. Napraw animacje na stronie głównej
 |   10. Sprawdź czy wszystkie formularz dobrze działają (nie)
-|   11. Dodaj seeder
 |   13. dodaj reszte na strone główną kursu
 |   14. Zrób coś z formularz do updatowania danych usera
 |

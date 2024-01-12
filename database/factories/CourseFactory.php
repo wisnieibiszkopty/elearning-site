@@ -19,7 +19,7 @@ class CourseFactory extends Factory
     {
         return [
             'title' => fake()->domainWord(),
-            'author_id' => factory(User::class)->create()->id(),
+            'author_id' => User::factory(),
             'code' => fake()->bothify(),
             'description' => fake()->text(30)
         ];
