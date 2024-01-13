@@ -31,39 +31,6 @@
     font-size: 72px;
 }
 
-@keyframes rotate {
-    from {
-        rotate: 0deg;
-    }
-
-    50% {
-        scale: 1.6 1.8
-    }
-
-    to {
-        rotate: 360deg
-    }
-}
-
-#blob{
-    overflow-x: hidden;
-    background-color: white;
-    height: 100%;
-    aspect-ratio: 1;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    translate: -50% -50%;
-    border-radius: 50%;
-    background: linear-gradient(
-        to right,
-        aquamarine,
-        mediumpurple
-    );
-    animation: rotate 30s infinite;
-    filter: blur(200px);
-}
-
 .change-avatar{
     transition: .5s ease;
     opacity: 0;

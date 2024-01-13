@@ -9,7 +9,7 @@
     @yield('head')
 </head>
 <body>
-    <div class="bg-base-200">
+    <div>
         @yield('content')
     </div>
 </body>

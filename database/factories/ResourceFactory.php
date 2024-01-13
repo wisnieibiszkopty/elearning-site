@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Core\Helper;
+use App\Helpers\Helper;
 
 use App\Models\Course;
 

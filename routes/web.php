@@ -22,11 +22,9 @@ use Illuminate\Support\Facades\Route;
 |
 |   Plan działania:
 |   2. Naprawić usuwanie plików ze storage
-|   3. Poprawić style
 |   4. Poprawić query do posts
 |   5. Dodać chat (zostało usuwać przycisk do nowych wiadomości i wyświetlać przycisk do etydowania po
 |       utworzeniu nowej wiadomosci)
-|   9. Napraw animacje na stronie głównej
 |   10. Sprawdź czy wszystkie formularz dobrze działają (nie)
 |   13. dodaj reszte na strone główną kursu
 |   14. Zrób coś z formularz do updatowania danych usera

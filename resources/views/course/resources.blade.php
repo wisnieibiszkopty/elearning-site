@@ -45,12 +45,9 @@
             </thead>
             <tbody>
             @foreach($course->resources->reverse() as $resource)
-                @php
-                    $file = public_path('storage/' . $resource->file_path);
-                @endphp
                 <tr class="hover">
                     <td></td>
-                    <td><a href="{{ $file }}" download="{{$resource->name}}">{{$resource->name}}</a></td>
+                    <td><a href="{{ asset('storage/' . $resource->file_path) }}" download="{{$resource->name}}">{{$resource->name}}</a></td>
                     <td>{{ $resource->file_size }}</td>
                     <td><p>{{$resource->created_at}}</p></td>
                     @if(auth()->id() == $course->author_id)

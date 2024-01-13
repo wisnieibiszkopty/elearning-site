@@ -29,7 +29,7 @@
     <div class="ml-10">
         <h2 class="text-xl mb-4">Tasks sent:</h2>
         @php
-        $ratio = $tasks->count() / $course->members->count() * 100;
+        $ratio = round($tasks->count() / $course->members->count() * 100, 2);
         echo '<div class="radial-progress text-primary" style="--value:'. $ratio .';" role="progressbar">'. $ratio .'%</div>';
         @endphp
     </div>
@@ -37,7 +37,7 @@
         <p style="color:red;">Wrong comment format!</p>
     @enderror
     @foreach($tasks as $task)
-        <div class="card bg-base-200 m-4 p-4 shadow-lg flex flex-row items-center justify-between">
+        <div class="card bg-base-200 m-4 p-4 shadow-lg flex flex-col space-y-4 md:flex-row md:items-center justify-between">
             <div>
                 <div class="flex flex-row items-center space-x-4">
                     <div class="avatar">
@@ -51,11 +51,11 @@
                     <p> | </p>
                     <div>
                         <a href="{{asset('storage/' . $task->file_path)}}" download="{{$task->filename}}" class="link link-secondary">
-                            {{$task->filename}}
+                            {{ (strlen($task->filename)) ? substr($task->filename, 0, 15) . '...' : $task->filename }}
                         </a>
                     </div>
                 </div>
-                <div class="flex space-x-4 mt-4">
+                <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 mt-4">
                     @if($task->sended_on_time)
                         <div class="badge badge-success">
                             Sent on time
@@ -79,9 +79,9 @@
                         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
                     <h3 class="font-bold text-lg">Add comment</h3>
-                    <form method="POST" action="/course/{{$course->id}}/homework/{{$homework->id}}/task/{{$task->id}}/comment">
+                    <form method="POST" action="/course/{{$course->id}}/homework/{{$homework->id}}/task/{{$task->id}}/comment" class="flex flex-col space-y-4 items-start">
                         @csrf
-                        <textarea name="comment" class="textarea textarea-bordered" placeholder="Write your comment...">{{$task->comment}}</textarea>
+                        <textarea required name="comment" class="textarea textarea-bordered" placeholder="Write your comment...">{{$task->comment}}</textarea>
                         <button class="btn btn-secondary">Comment</button>
                     </form>
                 </div>

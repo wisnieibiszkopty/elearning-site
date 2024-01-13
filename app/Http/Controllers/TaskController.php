@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Course;
 use App\Models\Homework;
-use App\Core\Helper;
+use App\Helpers\Helper;
 
 class TaskController extends Controller
 {

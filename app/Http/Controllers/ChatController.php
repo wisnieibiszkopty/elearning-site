@@ -17,9 +17,14 @@ use App\Models\Message;
 class ChatController extends Controller
 {
     public function index(){
-        $user = User::find(auth()->id());
+        $id = auth()->id();
 
-        return view('chat/index', ['chats' => $user->chats]);
+        // I have no idea if it is efficient
+        $chats = Chat::whereHas('users', function ($query) use ($id) {
+            $query->where('user_id', $id);
+        })->with('users', 'messages')->get();
+
+        return view('chat/index', ['chats' => $chats]);
     }
 
     public function create(int $userId){

@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Core\Helper;
+use App\Helpers\Helper;
 
 class HelperProvider extends ServiceProvider
 {

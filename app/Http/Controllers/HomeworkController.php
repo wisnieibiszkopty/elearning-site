@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\Homework;
 use App\Models\Task;
-use App\Core\Helper;
+use App\Helpers\Helper;
 
 /*
  *
