@@ -3,17 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Events\MessageEvent;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Broadcast;
 
-use App\Models\User;
 use App\Models\Chat;
 use App\Models\Message;
 
-
-// chat ma jakeiś imaginacje kurwa zle to całkowicie robie
 class ChatController extends Controller
 {
     public function index(){

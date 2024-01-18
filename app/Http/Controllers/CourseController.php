@@ -94,7 +94,8 @@ class CourseController extends Controller
             $course->imagePath = $file->store('course_images', 'public');
             $course->save();
         }
-        return back();
+
+        return back()->with("message", "You have to add image!");
     }
 
     public function update(Request $request, int $id){

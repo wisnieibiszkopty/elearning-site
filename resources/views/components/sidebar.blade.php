@@ -1,7 +1,7 @@
 <div class="drawer-side" style="scroll-behavior: smooth; scroll-padding-top: 5rem;">
     <label for="drawer" aria-label="close sidebar" class="drawer-overlay"></label>
     <aside class="bg-base-100 min-h-screen md:w-60 w-80">
-        <ul class="menu bg-base-200 rounded-box mx-5 mg-top">
+        <ul class="menu bg-base-200 rounded-box mx-5 mg-top"">
             <li><a href="/course" class="group">
                 <span><i class="fa-solid fa-chalkboard-user"></i></span>
                 <span>Courses</span>

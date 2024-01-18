@@ -33,7 +33,7 @@ let userId = document.getElementById('data').getAttribute('user-id')
 let messages = document.getElementById('messages');
 
 Echo.private(`chat.${id}`).listen('.chat.message', (data) => {
-
+    console.log('jazda');
 
     let newMessage = document.createElement('div');
     let messageContent = document.createElement('div');

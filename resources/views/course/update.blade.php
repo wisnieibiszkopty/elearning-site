@@ -7,6 +7,11 @@
     <br>
     <div class="card bg-base-200">
         <div class="card-body flex items-center">
+            @if(Session::has('message'))
+                <div role="alert" class="alert alert-error">
+                    <span>{{Session::get('message')}}</span>
+                </div>
+            @endif
             <div class="mx-auto my-10">
                 <!-- Edit image -->
                 <h3 class="text-xl mb-2">Change image</h3>

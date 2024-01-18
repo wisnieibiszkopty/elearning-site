@@ -25,10 +25,8 @@ use Illuminate\Support\Facades\Route;
 |   4. Poprawić query do posts
 |   5. Dodać chat (zostało usuwać przycisk do nowych wiadomości i wyświetlać przycisk do etydowania po
 |       utworzeniu nowej wiadomosci)
-|   10. Sprawdź czy wszystkie formularz dobrze działają (nie)
 |   13. dodaj reszte na strone główną kursu
-|   14. Zrób coś z formularz do updatowania danych usera
-|
+|   15. Napraw ZipArchive
 */
 
 Route::get('/', function () {

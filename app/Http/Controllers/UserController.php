@@ -86,23 +86,18 @@ class UserController extends Controller
         $user = User::find($id);
 
         if($request->hasFile('avatar') && $user){
-            // deleting old avatar if exists
-            // it don't work actually
-            $path = $user->avatarPath;
-            //dd(public_path($path));
-            // if(file_exists(public_path($path))){
-            //     unlink(public_path($path));
-            // }
-
             // storing new avatar
             $file = $request->file('avatar');
-            $user->avatarPath = $file->store('avatars', 'public');
-            $user->save();
-            return redirect('/user/' . $id);
+            if($file){
+                $user->avatarPath = $file->store('avatars', 'public');
+                $user->save();
+                return redirect('/user/' . $id);
+            }
+
         }
 
         // add error message
-        return redirect('/user/' . $id);
+        return redirect('/user/' . $id . '/edit')->with("message", "You have to add image to change your avatar!");
     }
 
     // add message to back()

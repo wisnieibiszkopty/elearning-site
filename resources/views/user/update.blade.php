@@ -9,6 +9,11 @@
 
 @section('main')
     <div class="card">
+        @if(Session::has('message'))
+        <div role="alert" class="alert alert-error">
+            <span>{{Session::get('message')}}</span>
+        </div>
+        @endif
         <div class="card-body flex items-center">
             <!-- Avatar -->
             <div class="mx-7 md:mx-10">
@@ -21,7 +26,6 @@
                 </form>
             </div>
             <div class="flex flex-col md:flex-row md:my-10 my-3">
-                <!-- md:flex-row md:w-2/3 md:justify-around -->
                 <!-- Basic fields -->
                 <div class="md:mx-10">
                     <form method="POST" action="/user/{{$user->id}}" autocomplete="off" class="flex flex-col items-center">
@@ -29,8 +33,17 @@
                         @method('put')
                         @csrf
                         <input type="text" value="{{$user->name}}" name="name" class="input input-bordered w-full max-w-xs my-1">
+                        @error('name')
+                        <x-error :message="$message"></x-error>
+                        @enderror
                         <input type="text" value="{{$user->email}}" name="email" class="input input-bordered w-full max-w-xs my-1">
+                        @error('email')
+                        <x-error :message="$message"></x-error>
+                        @enderror
                         <input type="text" value="{{$user->company}}" name="company" class="input input-bordered w-full max-w-xs my-1">
+                        @error('company')
+                        <x-error :message="$message"></x-error>
+                        @enderror
                         <button class="btn btn-outline btn-warning w-full max-w-xs my-1">Update info</button>
                     </form>
                 </div>
@@ -41,15 +54,15 @@
                         <h3 class="text-xl my-3">Change password</h3>
                         @method('patch')
                         @csrf
-                        <input type="text" placeholder="Old password" name="old-password" class="input input-bordered w-full max-w-xs my-1">
+                        <input required type="text" placeholder="Old password" name="old-password" class="input input-bordered w-full max-w-xs my-1">
                         @error('old-password')
                         <x-error :message="$message"></x-error>
                         @enderror
-                        <input type="text" placeholder="New password" name="new-password" class="input input-bordered w-full max-w-xs my-1">
+                        <input required type="text" placeholder="New password" name="new-password" class="input input-bordered w-full max-w-xs my-1">
                         @error('old-password')
                         <x-error :message="$message"></x-error>
                         @enderror
-                        <input type="text" placeholder="Confirm password" name="new-password_confirmation" class="input input-bordered w-full max-w-xs my-1">
+                        <input required type="text" placeholder="Confirm password" name="new-password_confirmation" class="input input-bordered w-full max-w-xs my-1">
                         @error('old-password')
                         <x-error :message="$message"></x-error>
                         @enderror
