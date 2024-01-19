@@ -91,19 +91,25 @@ class UserController extends Controller
             if($file){
                 $user->avatarPath = $file->store('avatars', 'public');
                 $user->save();
-                return redirect('/user/' . $id);
+                return redirect('/user/' . $id)->with([
+                    "message" => "Succesfully updated avatar!",
+                    "success" => true
+                ]);
             }
 
         }
 
         // add error message
-        return redirect('/user/' . $id . '/edit')->with("message", "You have to add image to change your avatar!");
+        return redirect('/user/' . $id . '/edit')->with([
+            "message" => "You have to add image to change your avatar!",
+            "success" => false
+        ]);
     }
 
     // add message to back()
     public function password(Request $request){
         $passwordForm = $request->validate([
-            'old-password' => ['required', new PasswordRule],
+            'old-password' => ['required'],
             'new-password' => ['required', 'confirmed', new PasswordRule]
         ]);
 
@@ -111,11 +117,19 @@ class UserController extends Controller
 
         if(Hash::check($passwordForm['old-password'], $user->password)){
             $user->password = bcrypt($passwordForm['new-password']);
-            $user->save();
-            return back();
+            $saved = $user->save();
+            if($saved){
+                return back()->with([
+                    "message" => "Password changed!",
+                    "success" => true
+                ]);
+            }
         }
 
-        return back();
+        return back()->with([
+            "message" => "Cannot change password!",
+            "success" => true
+        ]);
     }
 
     public function update(Request $request){
@@ -129,9 +143,19 @@ class UserController extends Controller
         $user->name = $updateForm['name'];
         $user->email = $updateForm['email'];
         $user->company = $updateForm['company'];
-        $user->save();
+        $userSaved = $user->save();
+        $message = "User data changed successfully!";
+        $success = true;
 
-        return back();
+        if(!$userSaved){
+            $message = "Error occurred while updating user data!";
+            $success = false;
+        }
+
+        return back()->with([
+            "message" => $message,
+            "success" => $success
+        ]);
     }
 
     public function destroy($id){

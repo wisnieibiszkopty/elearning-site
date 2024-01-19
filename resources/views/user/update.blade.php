@@ -9,11 +9,7 @@
 
 @section('main')
     <div class="card">
-        @if(Session::has('message'))
-        <div role="alert" class="alert alert-error">
-            <span>{{Session::get('message')}}</span>
-        </div>
-        @endif
+        <x-message></x-message>
         <div class="card-body flex items-center">
             <!-- Avatar -->
             <div class="mx-7 md:mx-10">

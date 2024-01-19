@@ -4,6 +4,7 @@
 
 @section('main')
 <div class="m-2">
+    <x-message></x-message>
     <div class="flex flex-col">
         <div class="flex flex-col items-center">
             @if($user->id == auth()->id())

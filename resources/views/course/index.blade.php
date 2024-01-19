@@ -31,6 +31,7 @@
             </dialog>
         </div>
     @endif
+    <x-message></x-message>
     <div class="grid-container grid">
         @forelse($courses as $course)
             <x-course-item :course="$course"></x-course-item>

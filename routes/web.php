@@ -25,8 +25,6 @@ use Illuminate\Support\Facades\Route;
 |   4. Poprawić query do posts
 |   5. Dodać chat (zostało usuwać przycisk do nowych wiadomości i wyświetlać przycisk do etydowania po
 |       utworzeniu nowej wiadomosci)
-|   13. dodaj reszte na strone główną kursu
-|   15. Napraw ZipArchive
 */
 
 Route::get('/', function () {
@@ -72,10 +70,12 @@ Route::middleware('auth')->group(function(){
 
         // routes for managing specific course
         Route::controller(CourseController::class)->group(function(){
+            Route::get('/members', 'members')->middleware('member');
             Route::get('/edit', 'edit')->middleware('author');
             Route::patch('/image', 'image')->middleware('author');
             Route::put('/', 'update')->middleware('author');
             Route::delete('/leave', 'leave')->middleware('member');
+            Route::delete('/kick/{userId}', 'kick')->middleware('author');
             Route::delete('/', 'destroy')->middleware('author');
         });
 

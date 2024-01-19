@@ -65,6 +65,12 @@ class CourseController extends Controller
         return redirect('course/' . $course->id . '/posts');
     }
 
+    public function members(int $id){
+        $course = Course::find($id);
+
+        return view('course.members', ['course' => $course]);
+    }
+
     // method for adding user to course, based on members table
     public function join(Request $request){
         $entryCode = $request['code'];
@@ -122,7 +128,18 @@ class CourseController extends Controller
     public function leave(int $id){
         $course = Course::find($id);
         $userId = auth()->id();
+
         if($userId != $course->author_id){
+            $course->members()->detach($userId);
+        }
+        return back();
+    }
+
+    public function kick(int $courseId, int $userId){
+        $course = Course::find($courseId);
+        $authorId = auth()->id();
+
+        if($authorId == $course->author_id){
             $course->members()->detach($userId);
         }
         return back();
@@ -132,9 +149,15 @@ class CourseController extends Controller
         $course = Course::find($id);
         if($course->author_id == auth()->id()){
             $course->delete();
-            return redirect('/course');
+            return redirect('/course')->with([
+                'message' => 'Delete course!',
+                'success' => true
+            ]);
         }
 
-        return redirect('/course/' . $id . '/edit');
+        return redirect('/course/' . $id . '/edit')->with([
+            'message' => 'Cannot delete course!',
+            'success' => false
+        ]);
     }
 }

@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use ZipArchive;
+use Illuminate\Support\Facades\File;
+
 use App\Models\Task;
 use App\Models\Course;
 use App\Models\Homework;
@@ -22,7 +26,7 @@ class TaskController extends Controller
             // we have to store file in both cases -
             // when user upload task and when user edit task
             $file = $request->file('task-file');
-            $filePath = $file->store('tasks', 'public');
+            $filePath = $file->store('tasks/' . $homeworkId, 'public');
 
             $task = Task::where('homework_id', $homeworkId)->where('author_id', $user)->first();
 
@@ -87,25 +91,33 @@ class TaskController extends Controller
 
     public function downloadAll($id, $homeworkId){
         $homework = Homework::find($homeworkId);
-        $tasks = $homework->tasks;
-        $filepaths = [];
-        foreach ($tasks as $task){
-            $filepaths[$task->filename] = public_path($task->file_path);
-        }
-        //dd($filepaths);
 
         $zipFilename = $homework->name . ".zip";
-        $zip = new \ZipArchive();
-        $zip->open(public_path($zipFilename), \ZipArchive::CREATE);
+        $zip = new ZipArchive();
 
-        foreach($filepaths as $filename => $filepath){
-            //dd($filepath);
-            // nie dziala :<<
-            $zip->addFile($filepath, $filename);
+        if($zip->open(public_path($zipFilename), ZipArchive::CREATE)){
+            $files = File::files(public_path('storage/tasks/' . $homeworkId));
+
+            foreach ($files as $key => $value){
+                $relativeName = basename($value);
+                $zip->addFile($value, $relativeName);
+            }
+
+            $zip->close();
+
+            $response = new Response(file_get_contents($zipFilename));
+            $response->header('Content-Type', 'application/zip');
+            $response->header('Content-Disposition', 'attachment; filename="' . $zipFilename . '"');
+
+            unlink($zipFilename);
+
+            return $response;
         }
-        $zip->close();
 
-        return response()->download(public_path($zipFilename))->deleteFileAfterSend(true);
+        return back()->with([
+           "message" => "Cannot download zip file",
+           "success" => false
+        ]);
     }
 
     public function destroy($id, $homeworkId, $taskId){
