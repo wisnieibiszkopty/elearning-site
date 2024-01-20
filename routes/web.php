@@ -21,10 +21,11 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 |   Plan działania:
-|   2. Naprawić usuwanie plików ze storage
-|   4. Poprawić query do posts
 |   5. Dodać chat (zostało usuwać przycisk do nowych wiadomości i wyświetlać przycisk do etydowania po
 |       utworzeniu nowej wiadomosci)
+|   6. Dodaj skrypt inicjalizacyjny
+|   7. Testy integracyjne??
+|
 */
 
 Route::get('/', function () {

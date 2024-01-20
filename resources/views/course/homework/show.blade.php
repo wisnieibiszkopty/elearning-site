@@ -10,6 +10,9 @@
             <p>{{$homework->description}}</p>
             <p>Deadline: {{$homework->finish_date}}</p>
             <p>Remaining time: {{$onTime ? $finishTime : "Task closed"}}</p>
+            @if($homework->file_path != "")
+                <a href="{{asset('storage/' . $homework->file_path)}}" download class="link link-secondary">{{ str_replace('homework/', '', $homework->file_path) }}</a>
+            @endif
         </div>
     </div>
     @isset($task->comment)
@@ -20,9 +23,6 @@
         </div>
         @endif
     @endisset
-    @if($homework->file_path != "")
-        <a href="{{asset('storage/' . $homework->file_path)}}" download>{{$homework->file_path}}</a>
-    @endif
     <br>
     <!-- File wasn't added by user yet -->
     @if(!$task)

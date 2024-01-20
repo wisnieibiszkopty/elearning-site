@@ -11,7 +11,6 @@ class PostController extends Controller
     // there is problem with comments -> i don't know how to limit comments which i get
     public function show(int $id){
         $course = Course::with(['posts.comments'])->find($id);
-        // napraw
         $posts = $course->posts()->latest()->paginate(6);
 
         return view('course/posts', ['course' => $course,

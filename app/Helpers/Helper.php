@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Facades\Storage;
+
 class Helper{
 
     public function __construct(){
@@ -34,4 +36,12 @@ class Helper{
         return round($bytes, 2) . ' ' . $units[$pow];
     }
 
+    public static function deleteFile($oldFilePath): bool{
+        if($oldFilePath){
+            Storage::delete('public/' .  $oldFilePath);
+            return true;
+        }
+
+        return false;
+    }
 }

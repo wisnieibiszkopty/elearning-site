@@ -8,13 +8,6 @@ use App\Models\Course;
 use App\Models\Resource;
 use Illuminate\Support\Facades\Storage;
 
-/*
- *
- *  działa git, tylko popraw cssy
- *  i zrób coś z usuwaniem plików z aplikacji
- *
- */
-
 class ResourceController extends Controller
 {
     // add pagination
@@ -41,10 +34,19 @@ class ResourceController extends Controller
                 'file_path' => $filePath,
                 'file_size' => $formattedSize
             ]);
-            $resource->save();
+
+            if($resource->save()){
+                return back()->with([
+                   'message' => 'Resource created successfully!',
+                   'success' => true
+                ]);
+            }
         }
 
-        return back();
+        return back()->with([
+            'message' => 'Cannot creat resource!',
+            'success' => false
+        ]);
     }
 
     public function update(Request $request, int $id, int $resourceId){
@@ -58,14 +60,16 @@ class ResourceController extends Controller
 
     public function destroy(int $id, int $resourceId){
         $resource = Resource::find($resourceId);
-        $filePath = public_path($resource->file_path);
-
-        // method behaves like file doesn't exist
-        if(Storage::exists($filePath)){
-            Storage::delete($filePath);
+        $filePath = $resource->file_path;
+        if($filePath){
+            Storage::delete('public/' . $filePath);
         }
+
         $resource->delete();
 
-        return back();
+        return back()->with([
+            'message' => 'Deleted resource successfully!',
+            'success' => true
+        ]);
     }
 }

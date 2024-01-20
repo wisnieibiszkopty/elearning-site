@@ -15,8 +15,5 @@
             <h1 class="text-3xl">{{ $course->title }}</h1>
         </div>
     </div>
-    <!-- <div class="mb-10 mt-5 w-2/3">
-        <p class="text-xl">{{ $course->description }}</p>
-    </div> -->
     @yield('course')
 @endsection

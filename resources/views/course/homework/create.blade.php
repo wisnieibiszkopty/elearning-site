@@ -2,10 +2,6 @@
 
 @section('title', 'Add homework')
 
-<!--
-    checkbox psuje układ i nie moge wysrodkowac
--->
-
 @section('course')
     <x-course-menu :authorId="$course->author_id" :id="$course->id" active="3"></x-course-menu>
     <div class="md:w-3/4 mx-auto mt-20 w-full">

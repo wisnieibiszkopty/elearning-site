@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Rules\PasswordRule;
+use App\Helpers\Helper;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+
+use App\Models\User;
+use App\Rules\PasswordRule;
 
 class UserController extends Controller
 {
@@ -88,7 +91,11 @@ class UserController extends Controller
         if($request->hasFile('avatar') && $user){
             // storing new avatar
             $file = $request->file('avatar');
+
             if($file){
+                // deleting old file if exists
+                Helper::deleteFile($user->avatarPath);
+
                 $user->avatarPath = $file->store('avatars', 'public');
                 $user->save();
                 return redirect('/user/' . $id)->with([
@@ -96,17 +103,14 @@ class UserController extends Controller
                     "success" => true
                 ]);
             }
-
         }
 
-        // add error message
         return redirect('/user/' . $id . '/edit')->with([
             "message" => "You have to add image to change your avatar!",
             "success" => false
         ]);
     }
 
-    // add message to back()
     public function password(Request $request){
         $passwordForm = $request->validate([
             'old-password' => ['required'],

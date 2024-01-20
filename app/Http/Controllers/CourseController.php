@@ -2,20 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Course;
-use App\Models\Post;
-use App\Models\User;
+use App\Helpers\Helper;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
 use Illuminate\Database\UniqueConstraintViolationException;
 
-/*
- *
- *  Dodaj bledy w widoku dodawania kursu i edycji
- *  napraw ten show zasrany
- */
-
+use App\Models\Course;
 
 class CourseController extends Controller
 {
@@ -97,11 +88,22 @@ class CourseController extends Controller
         $course = Course::find($id);
         if($request->hasFile('image') && $course){
             $file = $request->file('image');
+
+            Helper::deleteFile($course->imagePath);
+
             $course->imagePath = $file->store('course_images', 'public');
             $course->save();
+
+            return back()->with([
+                "message" => "Image added successfully!",
+                "success" => true
+            ]);
         }
 
-        return back()->with("message", "You have to add image!");
+        return back()->with([
+            "message" => "You have to add image!",
+            "success" => false
+        ]);
     }
 
     public function update(Request $request, int $id){

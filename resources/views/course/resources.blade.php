@@ -4,6 +4,7 @@
 
 @section('course')
     <x-course-menu :authorId="$course->author_id" :id="$course->id" active="2"></x-course-menu>
+    <x-message></x-message>
     @if($course->author_id == auth()->id())
     <div class="flex justify-end mr-10 my-5">
         <button class="btn btn-secondary" onclick="resource_modal.showModal()">Add resource</button>

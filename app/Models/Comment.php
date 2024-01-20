@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-// need to run migrations again beacuse i forget to add timestamps
 class Comment extends Model
 {
     use HasFactory;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 use Illuminate\Support\Facades\File;
 
@@ -32,6 +33,11 @@ class TaskController extends Controller
 
             // task exist so there is no need to create it again
             if($task){
+                $oldFilePath = $task->file_path;
+                if($oldFilePath){
+                    Storage::delete('public/' . $oldFilePath);
+                }
+
                 $task->update([
                     'file_path' => $filePath,
                     'filename' => $file->getClientOriginalName(),
@@ -96,22 +102,24 @@ class TaskController extends Controller
         $zip = new ZipArchive();
 
         if($zip->open(public_path($zipFilename), ZipArchive::CREATE)){
-            $files = File::files(public_path('storage/tasks/' . $homeworkId));
+            if(File::isDirectory(public_path('storage/tasks/' . $homeworkId))){
+                $files = File::files(public_path('storage/tasks/' . $homeworkId));
 
-            foreach ($files as $key => $value){
-                $relativeName = basename($value);
-                $zip->addFile($value, $relativeName);
+                foreach ($files as $key => $value){
+                    $relativeName = basename($value);
+                    $zip->addFile($value, $relativeName);
+                }
+
+                $zip->close();
+
+                $response = new Response(file_get_contents($zipFilename));
+                $response->header('Content-Type', 'application/zip');
+                $response->header('Content-Disposition', 'attachment; filename="' . $zipFilename . '"');
+
+                unlink($zipFilename);
+
+                return $response;
             }
-
-            $zip->close();
-
-            $response = new Response(file_get_contents($zipFilename));
-            $response->header('Content-Type', 'application/zip');
-            $response->header('Content-Disposition', 'attachment; filename="' . $zipFilename . '"');
-
-            unlink($zipFilename);
-
-            return $response;
         }
 
         return back()->with([
@@ -122,7 +130,20 @@ class TaskController extends Controller
 
     public function destroy($id, $homeworkId, $taskId){
         $task = Task::find($taskId);
-        if($task) $task->delete();
-        return redirect('/course/' . $id . '/homework/' . $homeworkId . '/task');
+
+        $message = "Cannot delete task!";
+        $success = false;
+
+        if($task){
+            Helper::deleteFile($task->file_path);
+            $task->delete();
+
+            $message = "Task successfully deleted!";
+            $success = true;
+        }
+        return redirect('/course/' . $id . '/homework/' . $homeworkId . '/task')->with([
+            'message' => $message,
+            'success' => $success
+        ]);
     }
 }

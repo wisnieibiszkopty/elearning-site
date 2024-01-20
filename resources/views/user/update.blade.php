@@ -2,11 +2,6 @@
 
 @section('title', 'Edit profile')
 
-<!--
-    ogarnij jebane padding i marginy
-    kurwa jak sie doda errory to jeszcze bardziej sie rozpierdala
--->
-
 @section('main')
     <div class="card">
         <x-message></x-message>

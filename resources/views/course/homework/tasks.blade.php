@@ -4,12 +4,16 @@
 
 @section('course')
     <x-course-menu :authorId="$course->author_id" :id="$course->id" active="3"></x-course-menu>
+    <x-message></x-message>
     <div class="flex flex-col md:flex-row items-center mb-10">
         <div class="card-body">
             <h2 class="card-title text-2xl">{{$homework->name}}</h2>
             <p>{{$homework->description}}</p>
             <p>Deadline: {{$homework->finish_date}}</p>
             <p>Remaining time: {{$onTime ? $finishTime : "Task closed"}}</p>
+            @if($homework->file_path != "")
+                <a href="{{asset('storage/' . $homework->file_path)}}" download class="link link-secondary">{{ str_replace('homework/', '', $homework->file_path) }}</a>
+            @endif
             <div class="badge badge-warning">{{ $homework->available ? 'available' : 'unavailable' }}</div>
         </div>
         <div class="flex md:flex-col flex-row space-x-2 space-y-2 items-end">

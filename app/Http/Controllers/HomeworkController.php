@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use App\Models\Course;
 use App\Models\Homework;
 use App\Models\Task;
@@ -12,6 +13,7 @@ use App\Helpers\Helper;
  *
  *  if user didn't sent task on time, and finish date will be changed
  *  so that user now sent task before that date, status won't change (fix in future)
+ *
  */
 
 class HomeworkController extends Controller
@@ -110,19 +112,33 @@ class HomeworkController extends Controller
 
         // remember to delete old file
         if($request->hasFile('file')){
+            dd('test');
+
             $file = $request->file('file');
+            Helper::deleteFile($homework->file_path);
+
             $filePath = $file->store('homework', 'public');
             $homework->file_path = $filePath;
         }
 
-        $homework->save();
+        $message = "Cannot edit homework!";
+        $success = false;
 
-        return redirect('/course/' . $id . '/homework/' . $homeworkId . '/edit');
+        if($homework->save()){
+            $message = "Updated homework successfulyy!";
+            $success = true;
+        }
+
+        return redirect('/course/' . $id . '/homework/' . $homeworkId . '/edit')->with([
+            'message' => $message,
+            'success' => $success
+        ]);
     }
 
     public function destroy(int $id, int $homeworkId){
         $homework = Homework::find($homeworkId);
         if($homework){
+            Helper::deleteFile($homework->file_path);
             $homework->delete();
         }
 
