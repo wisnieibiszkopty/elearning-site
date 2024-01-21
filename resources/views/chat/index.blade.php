@@ -24,7 +24,8 @@
                                         $message = $chat->lastMessage->message;
                                     @endphp
                                     <span>{{ $chat->lastMessage->updated_at }}</span> |
-                                    <span>{{ (strlen($message)) > 30 ? substr($message, 0, 30) . '...' : $message }}</span>
+                                    <span>{{ $chat->lastMessage->chat_member_id == auth()->id() ? 'You: ' : '' }}
+                                        {{ (strlen($message)) > 30 ? substr($message, 0, 30) . '...' : $message }}</span>
                                 @endif
                             </div>
                         </div>

@@ -21,8 +21,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 |   Plan działania:
-|   5. Dodać chat (zostało usuwać przycisk do nowych wiadomości i wyświetlać przycisk do etydowania po
-|       utworzeniu nowej wiadomosci)
+|   5. Naprawic usuwanie i edytowanie wiadomosci w chatcie
 |   6. Dodaj skrypt inicjalizacyjny
 |   7. Testy integracyjne??
 |

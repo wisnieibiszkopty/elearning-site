@@ -19,7 +19,7 @@
                                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                             </form>
                             <h3 class="text-2xl mb-10">Edit message</h3>
-                            <form method="POST" action="/chats/message/{{$message->id}}" class="flex flex-col">
+                            <form method="POST" action="/chats/message/{{$message->id}}" id="sendMessage" class="flex flex-col">
                                 @method('put')
                                 @csrf
                                 <textarea class="textarea textarea-bordered" name="message" rows="5">{{$message->message}}</textarea>

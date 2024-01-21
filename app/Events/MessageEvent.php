@@ -16,15 +16,17 @@ class MessageEvent implements ShouldBroadcast
     public string $message;
     public int $roomId;
     public int $senderId;
+    public int $messageId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($roomId, $senderId, $message)
+    public function __construct($roomId, $senderId, $message, $messageId)
     {
         $this->roomId = $roomId;
         $this->senderId = $senderId;
         $this->message = $message;
+        $this->messageId = $messageId;
     }
 
     /**

@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
    let theme = localStorage.getItem('theme');
    if(theme){
-       console.log(theme);
        themeControllers.forEach(function(radioButton){
            if(radioButton.value === theme){
                radioButton.checked = true;

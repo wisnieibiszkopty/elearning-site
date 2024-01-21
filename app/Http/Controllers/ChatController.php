@@ -50,7 +50,7 @@ class ChatController extends Controller
                 $friend = $user;
             }
         }
-        $messages = Message::where('chat_id', '=', $chatId)->latest()->paginate(5)->reverse();
+        $messages = Message::where('chat_id', '=', $chatId)->latest()->paginate(10)->reverse();
         return view('chat/show', ['chat' => $chat,
             'friend' => $friend,
             'messages' => $messages]);
@@ -58,11 +58,19 @@ class ChatController extends Controller
 
     // method for loading older messages
     public function load(Request $request, int $chatId){
+        $limit = 10;
+
         $messages = Message::where('chat_id', '=', $chatId)
             ->latest()
-            ->paginate(5, ['*'], 'page', $request->page)
+            ->paginate($limit, ['*'], 'page', $request->page)
             ->reverse();
-        return view('chat/messages', ['messages' => $messages])->render();
+
+        $moreMessages = count($messages) === $limit;
+
+        return response()->json([
+            'messages' => $messages,
+            'moreMessages' => $moreMessages
+        ]);
     }
 
     public function store(Request $request, int $chatId){
@@ -77,16 +85,16 @@ class ChatController extends Controller
             $status = 'ok';
 
             // store message in database
-            Message::create([
+            $msg = Message::create([
                 'chat_id' => $chatId,
                 'chat_member_id' => $senderId,
                 'message' => $message
             ]);
-        }
 
-        // broadcasting message
-        // generate edit and delete button
-        MessageEvent::dispatch($chatId, $senderId, $message);
+            // broadcasting message
+            // it stopped working for no reason
+            MessageEvent::dispatch($chatId, $senderId, $message, $msg->id);
+        }
 
         // returning status
         return response()->json([
@@ -103,9 +111,9 @@ class ChatController extends Controller
     }
 
     public function destroy(Message $message){
-        if(auth()->id() == $message->chat_member_id){
-            $message->delete();
-        }
-        return redirect('/chats/' . $message->chat_id);
+//        if(auth()->id() == $message->chat_member_id){
+//            $message->delete();
+//        }
+//        return redirect('/chats/' . $message->chat_id);
     }
 }
