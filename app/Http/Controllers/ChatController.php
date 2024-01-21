@@ -103,17 +103,28 @@ class ChatController extends Controller
     }
 
     public function edit(Request $request, Message $message){
+        $status = "not ok";
+
         if(auth()->id() == $message->chat_member_id){
             $message->message = $request->message;
-            $message->update();
+            if($message->update()){
+                $status = "ok";
+            }
         }
-        return redirect('/chats/' . $message->chat_id);
+        return response()->json([
+            'status' => $status,
+            'message' => $message->message
+        ]);
     }
 
     public function destroy(Message $message){
-//        if(auth()->id() == $message->chat_member_id){
-//            $message->delete();
-//        }
-//        return redirect('/chats/' . $message->chat_id);
+        $status = "not ok";
+
+        if(auth()->id() == $message->chat_member_id){
+            if($message->delete()){
+                $status = "ok";
+            }
+        }
+        return response()->json(['status' => $status]);
     }
 }

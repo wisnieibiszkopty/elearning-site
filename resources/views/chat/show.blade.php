@@ -6,13 +6,15 @@
 @endsection
 
 @section('main')
-<div class="navbar bg-base-200 rounded-full flex justify-center">
-    <div class="avatar">
-        <div class="w-12 rounded-full">
-            <img src="{{$friend->avatarPath ? asset('storage/' . $friend->avatarPath) : asset('images/avatar-placeholder.jpg')}}" alt="{{$friend->name}}">
+<div class="flex justify-center">
+    <div class="navbar bg-base-200 rounded-lg flex justify-center space-x-5 py-3 md:w-1/3">
+        <div class="avatar">
+            <div class="w-12 rounded-full">
+                <img src="{{$friend->avatarPath ? asset('storage/' . $friend->avatarPath) : asset('images/avatar-placeholder.jpg')}}" alt="{{$friend->name}}">
+            </div>
         </div>
+        <a href="/user/{{$friend->id}}"><h1 class="text-2xl bold">{{$friend->name}}</h1></a>
     </div>
-    <a href="/user/{{$friend->id}}"><h1 class="text-2xl bold">{{$friend->name}}</h1></a>
 </div>
 <div id="load-more-wrapper" class="flex justify-center my-10"><a id="load-more" class="link link-secondary">Load older messages</a></div>
 <div id="messages">

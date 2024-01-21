@@ -45,37 +45,62 @@ document.addEventListener('keydown', function (event){
     }
 });
 
-// wyobrazcie sobie moi mili ze po nacisnieciu enter na stronie,
-// submitowany jest formularz, po czym autoryzacji idzie sie pierdolic
-// co uniemozliwia uzywanie pushera 😤😠😡🤬
-
 function deleteMessage(messageId){
-    console.log(messageId);
-
-    // fetch('chats/message/' + messageId, {
-    //     method: 'DELETE',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //         'X-CSRF-TOKEN': csrfToken,
-    //     }
-    // })
-    //     .then(response => {
-    //         window.location.href = response.headers.get('Location');
-    //     })
-    //     .catch(error => {
-    //         console.error(error);
-    //     });
+    fetch('message/' + messageId, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+        }
+    })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            if(data.status === "ok"){
+                document.getElementById('message_' + messageId).remove();
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        });
 }
 
-function editMessage(){
+function editMessage(messageId){
+    const message = document.getElementById('textarea_' + messageId).value;
+    console.log(message);
 
+    fetch('message/' + messageId, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+        },
+        body: JSON.stringify({
+            message: message
+        })
+    })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            if(data.status === "ok"){
+                const messageElement = document.getElementById("message_" + messageId);
+                const chatBubble = messageElement.getElementsByClassName('chat-bubble')[0];
+                chatBubble.innerText = data.message;
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        });
 }
 
 function generateMessage(senderId, message, messageId){
     console.log(messageId);
 
     let html = "";
-    html = '<div class="chat ' + (senderId == userId ? 'chat-end' : 'chat-start') + ' group relative">' +
+    html = '<div id="message_' + messageId + '" class="chat ' + (senderId == userId ? 'chat-end' : 'chat-start') + ' group relative">' +
         '<div class="chat-bubble ' + (senderId == userId ? 'chat-bubble-secondary' : '') + '">' + message + '</div>';
 
     if (senderId == userId) {
@@ -83,29 +108,25 @@ function generateMessage(senderId, message, messageId){
             '<div tabIndex="0" role="button" class="m-1 mb-3 invisible group-hover:visible"><i class="fa-solid fa-ellipsis"></i></div>' +
             '<ul tabIndex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">';
 
-        let id = messageId;
-        let modal = 'edit_modal' + id + '.showModal()';
+        let modal = 'edit_modal' + messageId + '.showModal()';
 
         html += '<li><a onClick="' + modal + '">Edit</a></li>' +
-            '<dialog id="edit_modal' + id + '" class="modal">' +
-            '<div class="modal-box">' +
-            '<form method="dialog">' +
-            '<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>' +
-            '</form>' +
-            '<h3 class="text-2xl mb-10">Edit message</h3>' +
-            '<form method="POST" action="/chats/message/' + id + '" id="sendMessage" class="flex flex-col">' +
-            '<?php echo method_field("put"); ?>' +
-            '<?php echo csrf_field(); ?>' +
-            '<textarea class="textarea textarea-bordered" name="message" rows="5">' + message + '</textarea>' +
-            '<button class="btn btn-primary mt-10 w-1/4">Edit</button>' +
-            '</form>' +
-            '</div>' +
+            '<dialog id="edit_modal' + messageId + '" class="modal">' +
+                '<div class="modal-box">' +
+                    '<form method="dialog">' +
+                        '<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>' +
+                    '</form>' +
+                    '<h3 class="text-2xl mb-10">Edit message</h3>' +
+                    '<div class="flex flex-col">' +
+                        '<textarea id="textarea_' + messageId + '" class="textarea textarea-bordered" name="message" rows="5">' + message + '</textarea>' +
+                        '<button class="btn btn-primary mt-10 w-1/4" onclick="editMessage(' + messageId + ')">Edit</button>' +
+                    '</div>' +
+                '</div>' +
             '</dialog>' +
             '<li>' +
-            '<button style="color:red;" onclick="deleteMessage(id)">Delete</button>' +
+                '<button style="color:red;" onclick="deleteMessage(' + messageId + ')">Delete</button>' +
             '</li>';
-        html += '</ul>' +
-            '</div>';
+        html += '</ul>' + '</div>';
     }
     html += '</div>';
 
@@ -118,10 +139,9 @@ Echo.private(`chat.${id}`).listen('.chat.message', (data) => {
     const senderId = data.senderId
     const message = data.message;
     const messageId = data.messageId;
-    console.log(messageId);
     const messageElement = generateMessage(senderId, message, messageId);
     messages.insertAdjacentHTML('beforeend', messageElement);
-
+    scrollToBottom();
 
     // let newMessage = document.createElement('div');
     // let messageContent = document.createElement('div');
@@ -177,3 +197,26 @@ document.getElementById('load-more').addEventListener('click', function () {
             console.error(error);
         });
 });
+
+function scrollToBottom() {
+    let startY = window.scrollY;
+    let endY = document.documentElement.scrollHeight - window.innerHeight;
+    let duration = 500;
+
+    let startTime;
+
+    function scrollAnimation(currentTime) {
+        if (!startTime) startTime = currentTime;
+
+        let elapsedTime = currentTime - startTime;
+        let progress = Math.min(elapsedTime / duration, 1);
+
+        window.scrollTo(0, startY + progress * (endY - startY));
+
+        if (progress < 1) {
+            requestAnimationFrame(scrollAnimation);
+        }
+    }
+
+    requestAnimationFrame(scrollAnimation);
+}
