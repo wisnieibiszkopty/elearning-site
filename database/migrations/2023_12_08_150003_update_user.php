@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string("company");
             $table->string("avatarPath")->nullable(true);
             $table->integer("role")->default(0);
-
+            $table->boolean("large_player")->default(true);
         });
     }
 
@@ -28,6 +28,7 @@ return new class extends Migration
             $table->dropColumn("company");
             $table->dropColumn("avatarPath");
             $table->dropColumn("role");
+            $table->dropColumn("large_player");
         });
     }
 };

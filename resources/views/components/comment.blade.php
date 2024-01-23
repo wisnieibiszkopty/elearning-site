@@ -24,10 +24,10 @@
                     @if($comment->author_id == auth()->id())
                         @php
                             $id = $comment->id;
-                            $modal = "edit_modal" . $id . ".showModal()";
+                            $modal = "edit_comment_modal" . $id . ".showModal()";
                             echo '<li><a onclick="' . $modal . '">Edit</a></li>';
                         @endphp
-                        <dialog id="edit_modal{{$comment->id}}" class="modal">
+                        <dialog id="edit_comment_modal{{$comment->id}}" class="modal">
                             <div class="modal-box">
                                 <form method="dialog">
                                     <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>

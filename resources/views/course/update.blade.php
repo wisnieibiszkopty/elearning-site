@@ -38,6 +38,27 @@
                     <textarea placeholder="Description..." name="description" class="textarea textarea-bordered w-full max-w-xs" cols="30" rows="5">{{$course->description}}</textarea><br>
                     <button class="btn btn-primary my-1 w-1/2">Change</button>
                 </form>
+                <!-- Player options -->
+                <h3 class="text-3xl my-2">Player options</h3>
+                <div>
+                    <form method="POST" action="/course/{{$course->id}}/player">
+                        @method('put')
+                        @csrf
+                        <input type="text" name="playlist_link"
+                               class="input input-bordered" value="{{$course->playlist_link}}">
+                        <button class="btn btn-outline btn-success">Add playlist</button>
+                    </form>
+                    @error('playlist_link')
+                    <x-error :message="$message"></x-error>
+                    @enderror
+                </div>
+                <div class="my-2">
+                    <form method="POST" action="/course/{{$course->id}}/player">
+                        @method('delete')
+                        @csrf
+                        <button class="btn btn-outline btn-error">Delete playlist</button>
+                    </form>
+                </div>
                 <!-- Deleting course -->
                 <h3 class="text-3xl my-2 ">Delete course</h3>
                 <button class="btn btn-outline btn-error w-1/2 mb-10" onclick="delete_modal.showModal()">Delete course</button>

@@ -5,10 +5,22 @@
 @section('course')
     <x-course-menu :authorId="$course->author_id" :id="$course->id" active="1"></x-course-menu>
     <div class="flex flex-col md:flex-row md:space-x-10">
-        <div class="w-3/4">
+        <div class="md:w-3/4">
             <div class="bg-base-200 p-5 rounded-xl">
                 <h2 class="text-xl">{{ $course->description }}</h2>
             </div>
+            @if($course->playlist_link)
+            <div>
+                <iframe
+                    class="my-10"
+                    style="border-radius:12px"
+                    src="{{$course->playlist_link}}"
+                    width="100%" height="{{auth()->user()->large_player ? 3 : 1}}52"
+                    frameBorder="0" allowfullscreen=""
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"></iframe>
+            </div>
+            @endif
             <div>
                 <div class="mx-auto w-full mt-10">
                     <form method="POST" action="/course/{{$course->id}}/posts/create" class="flex space-x-4">

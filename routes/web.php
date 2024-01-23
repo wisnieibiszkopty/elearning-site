@@ -9,6 +9,8 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\MusicPlayerController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,10 +22,6 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
 |
-|   Plan działania:
-|   5. Naprawic usuwanie i edytowanie wiadomosci w chatcie
-|   6. Dodaj skrypt inicjalizacyjny
-|   7. Testy integracyjne??
 |
 */
 
@@ -141,6 +139,12 @@ Route::middleware('auth')->group(function(){
         Route::post('/chats/{chatId}', 'store');
         Route::put('/chats/message/{message}', 'edit');
         Route::delete('/chats/message/{message}', 'destroy');
+    });
+
+    Route::controller(MusicPlayerController::class)->group(function(){
+        Route::post('/user/player', 'playerSize');
+        Route::put('course/{id}/player', 'update')->middleware('author');
+        Route::delete('course/{id}/player', 'destroy')->middleware('author');
     });
 });
 

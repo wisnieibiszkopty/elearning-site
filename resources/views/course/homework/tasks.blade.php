@@ -33,7 +33,7 @@
     <div class="ml-10">
         <h2 class="text-xl mb-4">Tasks sent:</h2>
         @php
-        $ratio = round($tasks->count() / $course->members->count() * 100, 2);
+        $ratio = round(($tasks->count() + 1) / $course->members->count() * 100, 2);
         echo '<div class="radial-progress text-primary" style="--value:'. $ratio .';" role="progressbar">'. $ratio .'%</div>';
         @endphp
     </div>

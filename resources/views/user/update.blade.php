@@ -61,6 +61,19 @@
                     </form>
                 </div>
             </div>
+            <!-- Spotify options -->
+            <div>
+                <h3 class="text-xl my-3">Spotify</h3>
+                <form method="POST" action="/user/player">
+                    @csrf
+                    <div class="flex my-4 space-x-4 items-center">
+                        <p>Enable large spotify player</p>
+                        <input type="checkbox" name="large-player" class="toggle toggle-success"
+                            {{ $user->large_player ? "checked" : ""}}>
+                    </div>
+                    <button class="btn btn-outline btn-success">Update</button>
+                </form>
+            </div>
             <!-- Delete account -->
             <div class="mx-7 md:mx-10">
                 <h3 class="text-xl my-3">Delete account</h3>
